@@ -12,7 +12,7 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="relative h-20 w-56 overflow-hidden rounded-2xl border border-neutral-800 bg-white shadow-lg shadow-black/30">
           <Image
-            src="/gym-logo.png"
+            src="/sala-brick-logo.png"
             alt="Sala Brick Fitness Brothers logo"
             fill
             sizes="224px"
