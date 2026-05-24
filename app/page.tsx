@@ -1,6 +1,7 @@
 // app/page.tsx
 
 import { CalculatorForm } from "@/components/CalculatorForm";
+import { DisclaimerGate } from "@/components/DisclaimerGate";
 
 export default function Home() {
   return (
@@ -53,7 +54,9 @@ export default function Home() {
           </div>
         </div>
 
-        <CalculatorForm />
+        <DisclaimerGate>
+          <CalculatorForm />
+        </DisclaimerGate>
 
         <div className="rounded-3xl border border-neutral-800 bg-neutral-900/80 p-6 md:p-8">
           <p className="text-sm uppercase tracking-[0.2em] text-emerald-400">
