@@ -1,5 +1,6 @@
 // app/page.tsx
 
+import { BrandLogo } from "@/components/BrandLogo";
 import { CalculatorForm } from "@/components/CalculatorForm";
 import { DisclaimerGate } from "@/components/DisclaimerGate";
 
@@ -8,11 +9,15 @@ export default function Home() {
     <main className="min-h-screen bg-neutral-950 px-4 py-8 text-neutral-100 md:py-12">
       <section className="mx-auto flex max-w-7xl flex-col gap-8">
         <div className="rounded-3xl border border-neutral-800 bg-neutral-900/80 p-6 shadow-2xl md:p-8">
-          <p className="mb-2 text-sm uppercase tracking-[0.2em] text-emerald-400">
-            BMR / TDEE / Macro Calculator
-          </p>
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <BrandLogo />
 
-          <h1 className="max-w-4xl text-3xl font-semibold tracking-tight md:text-5xl">
+            <div className="w-fit rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-300">
+              BMR / TDEE / Macro
+            </div>
+          </div>
+
+          <h1 className="mt-8 max-w-4xl text-3xl font-semibold tracking-tight md:text-5xl">
             Estimare calorii si macro-uri pentru obiectivul tau
           </h1>
 
@@ -95,15 +100,19 @@ export default function Home() {
         </div>
 
         <footer className="border-t border-neutral-900 pt-6">
-          <div className="flex flex-col gap-3 text-sm leading-6 text-neutral-500 md:flex-row md:items-center md:justify-between">
-            <p>
-              Rezultatele sunt estimari orientative si nu inlocuiesc evaluarea
-              medicala sau nutritionala individuala.
-            </p>
+          <div className="flex flex-col gap-5 text-sm leading-6 text-neutral-500 md:flex-row md:items-center md:justify-between">
+            <BrandLogo variant="footer" />
 
-            <p className="text-neutral-600">
-              Creat pentru educatie nutritionala si fitness.
-            </p>
+            <div className="max-w-2xl md:text-right">
+              <p>
+                Rezultatele sunt estimari orientative si nu inlocuiesc evaluarea
+                medicala sau nutritionala individuala.
+              </p>
+
+              <p className="mt-1 text-neutral-600">
+                AM Calorie Calculator by Alexandru Mihai.
+              </p>
+            </div>
           </div>
         </footer>
       </section>

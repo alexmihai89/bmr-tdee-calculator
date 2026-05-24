@@ -8,6 +8,14 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
   const [hasAccepted, setHasAccepted] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
+  function handleContinue() {
+    if (!isChecked) {
+      return;
+    }
+
+    setHasAccepted(true);
+  }
+
   if (hasAccepted) {
     return <>{children}</>;
   }
@@ -85,8 +93,8 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
 
         <button
           type="button"
-          disabled={!isChecked}
-          onClick={() => setHasAccepted(true)}
+          aria-disabled={!isChecked}
+          onClick={handleContinue}
           className={
             isChecked
               ? "rounded-2xl bg-emerald-500 px-5 py-4 text-base font-semibold text-neutral-950 transition hover:bg-emerald-400"
