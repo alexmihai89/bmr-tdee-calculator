@@ -110,6 +110,19 @@ function getGoalLabel(goal: CalorieCalculatorResult["input"]["goal"]): string {
   return "Masa musculara controlata";
 }
 
+function formatLiters(value: number): string {
+  return value.toLocaleString("ro-RO", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+}
+
+function formatHydrationRange(result: CalorieCalculatorResult): string {
+  return `${formatLiters(
+    result.hydration.dailyWaterLitersRange.min
+  )} - ${formatLiters(result.hydration.dailyWaterLitersRange.max)} L`;
+}
+
 function buildCopiedResultText(result: CalorieCalculatorResult): string {
   const rhythm =
     result.input.goal === "maintenance"
@@ -142,6 +155,10 @@ function buildCopiedResultText(result: CalorieCalculatorResult): string {
     "",
     "Recomandare macro:",
     macros,
+    "",
+    "Hidratare:",
+    `Apa recomandata: ${formatHydrationRange(result)} / zi`,
+    "Nota: foloseste intervalul ca reper general. In zilele cu antrenamente, caldura sau transpiratie ridicata, poate fi nevoie de putin mai mult.",
     "",
     "Estimari consum:",
     `BMR: ${formatCalories(result.bmr)} / zi`,
@@ -250,6 +267,57 @@ function SummaryPanel({ result }: { result: CalorieCalculatorResult }) {
   );
 }
 
+function HydrationPanel({ result }: { result: CalorieCalculatorResult }) {
+  return (
+    <div className="rounded-3xl border border-neutral-800 bg-neutral-900 p-5 md:p-6">
+      <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+        <div>
+          <p className="text-sm uppercase tracking-[0.2em] text-emerald-400">
+            Hidratare
+          </p>
+
+          <h2 className="mt-2 text-2xl font-semibold">
+            Recomandare orientativa
+          </h2>
+
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-400">
+            {result.hydration.explanation}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-emerald-900/70 bg-emerald-950/30 p-5 md:min-w-64">
+          <p className="text-sm text-emerald-200/80">Apa recomandata</p>
+          <p className="mt-2 text-3xl font-semibold tracking-tight text-neutral-100">
+            {formatHydrationRange(result)}
+          </p>
+          <p className="mt-1 text-sm text-emerald-200/70">pe zi</p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl border border-neutral-800 bg-neutral-950/60 p-4">
+          <p className="text-sm font-medium text-neutral-200">
+            Reper simplu
+          </p>
+          <p className="mt-2 text-sm leading-6 text-neutral-500">
+            Intervalul este calculat pe baza greutatii corporale, folosind
+            aproximativ 30-40 ml / kg corp / zi.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-neutral-800 bg-neutral-950/60 p-4">
+          <p className="text-sm font-medium text-neutral-200">
+            Ajustare practica
+          </p>
+          <p className="mt-2 text-sm leading-6 text-neutral-500">
+            {result.hydration.adjustmentNote}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function CalculatorResults({
   result,
 }: {
@@ -327,6 +395,8 @@ export function CalculatorResults({
           Ritm estimativ: <EstimatedRhythm result={result} />
         </p>
       </div>
+
+      <HydrationPanel result={result} />
 
       {result.macros && (
         <div className="rounded-3xl border border-neutral-800 bg-neutral-900 p-5 md:p-6">

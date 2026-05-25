@@ -108,6 +108,19 @@ export type MacroResult = {
   explanation: string;
 };
 
+export type HydrationResult = {
+  dailyWaterMlRange: {
+    min: number;
+    max: number;
+  };
+  dailyWaterLitersRange: {
+    min: number;
+    max: number;
+  };
+  explanation: string;
+  adjustmentNote: string;
+};
+
 export type CalculatorWarning = {
   level: WarningLevel;
   title: string;
@@ -144,6 +157,8 @@ export type CalorieCalculatorResult = {
   estimatedMonthlyWeightChangeKg: number;
 
   macros?: MacroResult;
+
+  hydration: HydrationResult;
 
   explanation: ExplanationResult;
 
