@@ -3,8 +3,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #f8faf7;
+  --foreground: #111827;
 }
 
 html {
@@ -29,7 +29,7 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-/* Better native form rendering on dark UI */
+/* Better native form rendering */
 input,
 select,
 textarea,
@@ -38,10 +38,50 @@ button {
 }
 
 select {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 ::selection {
-  background: rgba(16, 185, 129, 0.35);
-  color: #ffffff;
+  background: rgba(22, 163, 74, 0.18);
+  color: #052e16;
+}
+
+/* Subtle healthcare / nutrition background */
+.bio-light-background {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(34, 197, 94, 0.08), transparent 26%),
+    radial-gradient(circle at 88% 22%, rgba(14, 165, 233, 0.07), transparent 28%),
+    radial-gradient(circle at 70% 82%, rgba(234, 179, 8, 0.06), transparent 24%),
+    linear-gradient(180deg, #ffffff 0%, #f8faf7 46%, #f6f7f3 100%);
+}
+
+.bio-light-background::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  background-image:
+    radial-gradient(circle at 12px 12px, rgba(22, 101, 52, 0.22) 1px, transparent 1.5px),
+    linear-gradient(115deg, transparent 0 47%, rgba(22, 101, 52, 0.08) 48% 52%, transparent 53% 100%);
+  background-size: 88px 88px, 180px 180px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 82%, transparent 100%);
+}
+
+.bio-light-background::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.28;
+  background-image: url("data:image/svg+xml,%3Csvg width='900' height='900' viewBox='0 0 900 900' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.55'%3E%3Cpath d='M70 120C190 210 60 330 190 430C320 530 170 690 330 790' stroke='%23166534' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M115 150C245 250 105 350 235 455C365 560 225 715 375 820' stroke='%2314B8A6' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M98 165L150 146M130 230L190 205M105 305L170 285M150 390L215 365M205 490L270 465M220 610L285 585M275 730L340 705' stroke='%23166534' stroke-width='1.5' stroke-linecap='round'/%3E%3Ccircle cx='720' cy='150' r='8' fill='%2314B8A6'/%3E%3Ccircle cx='790' cy='225' r='5' fill='%23166534'/%3E%3Ccircle cx='690' cy='275' r='6' fill='%2314B8A6'/%3E%3Ccircle cx='805' cy='340' r='9' fill='%23166534'/%3E%3Cpath d='M720 150L790 225L690 275L805 340' stroke='%23166534' stroke-width='1.5'/%3E%3Ccircle cx='610' cy='650' r='7' fill='%2314B8A6'/%3E%3Ccircle cx='690' cy='705' r='5' fill='%23166534'/%3E%3Ccircle cx='760' cy='630' r='8' fill='%2314B8A6'/%3E%3Cpath d='M610 650L690 705L760 630' stroke='%23166534' stroke-width='1.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position:
+    left -220px top 80px,
+    right -180px bottom -120px;
+  background-size: 720px 720px;
 }

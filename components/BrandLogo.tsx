@@ -19,7 +19,7 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Deschide site-ul Sala Brick Fitness Brothers"
-          className="relative h-20 w-56 overflow-hidden rounded-2xl border border-neutral-800 bg-white shadow-lg shadow-black/30 transition hover:-translate-y-0.5 hover:border-emerald-500/40 hover:shadow-emerald-950/20"
+          className="relative h-20 w-56 overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-[0_16px_50px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-emerald-700/30 hover:shadow-[0_20px_70px_rgba(22,101,52,0.14)]"
         >
           <Image
             src="/sala-brick-logo.png"
@@ -31,17 +31,19 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
         </a>
 
         <div>
-          <p className="text-sm font-medium text-neutral-300">
+          <p className="text-sm font-semibold text-neutral-900">
             Creat pentru educatie nutritionala si fitness
           </p>
-          <p className="mt-1 text-xs leading-5 text-neutral-600">
+
+          <p className="mt-1 text-xs leading-5 text-neutral-500">
             Estimari realiste, explicatii simple si ajustari treptate.
           </p>
+
           <a
             href={gymWebsiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 inline-flex text-xs font-medium text-emerald-400 transition hover:text-emerald-300"
+            className="mt-2 inline-flex text-xs font-semibold text-emerald-700 transition hover:text-emerald-600"
           >
             salabrick.ro
           </a>
@@ -52,7 +54,7 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
 
   return (
     <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-      <div className="relative h-36 w-36 overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-950/70 shadow-2xl shadow-black/40 sm:h-44 sm:w-44">
+      <div className="relative h-36 w-36 overflow-hidden rounded-[2rem] border border-neutral-200 bg-white shadow-[0_20px_70px_rgba(15,23,42,0.10)] sm:h-44 sm:w-44">
         <Image
           src="/am-logo.png"
           alt="Alexandru Mihai logo"
@@ -64,11 +66,11 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
       </div>
 
       <div>
-        <p className="text-sm uppercase tracking-[0.22em] text-emerald-400">
+        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-700">
           AM Calorie Calculator
         </p>
 
-        <p className="mt-2 text-2xl font-semibold tracking-tight text-neutral-100 sm:text-3xl">
+        <p className="mt-2 text-2xl font-semibold tracking-tight text-neutral-950 sm:text-3xl">
           by Alexandru Mihai
         </p>
 
@@ -76,12 +78,12 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
           href={instagramUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-flex rounded-full border border-neutral-800 bg-neutral-950/60 px-3 py-1.5 text-sm font-medium text-neutral-300 transition hover:border-emerald-500/40 hover:text-emerald-300"
+          className="mt-3 inline-flex rounded-full border border-emerald-700/15 bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-800 transition hover:border-emerald-700/30 hover:bg-emerald-100"
         >
           Instagram: @alecsmihai
         </a>
 
-        <p className="mt-3 max-w-xl text-sm leading-6 text-neutral-400">
+        <p className="mt-3 max-w-xl text-sm leading-6 text-neutral-600">
           Calculator BMR / TDEE construit pentru estimari realiste, clare si
           usor de folosit.
         </p>

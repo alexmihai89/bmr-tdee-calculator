@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import { CalculatorResults } from "@/components/CalculatorResults";
+import { MinimalIcon } from "@/components/MinimalIcon";
 import { calculateCalories } from "@/lib/calorieCalculator";
 import { formatSteps } from "@/lib/formatters";
 import type {
@@ -151,18 +152,18 @@ function NumberField({
 
   return (
     <label className="flex flex-col gap-2">
-      <span className="text-sm text-neutral-300">{label}</span>
+      <span className="text-sm font-medium text-neutral-700">{label}</span>
 
-      <div className="flex items-center rounded-2xl border border-neutral-800 bg-neutral-950/70 px-4">
+      <div className="flex items-center rounded-2xl border border-neutral-200 bg-white px-4 shadow-sm transition focus-within:border-emerald-600/40 focus-within:ring-4 focus-within:ring-emerald-600/10">
         <input
           type="text"
           inputMode="numeric"
           value={draftValue}
           onChange={(event) => handleChange(event.target.value)}
           onBlur={handleBlur}
-          className="w-full bg-transparent py-3 text-base text-neutral-100 outline-none"
+          className="w-full bg-transparent py-3 text-base text-neutral-950 outline-none"
         />
-        {suffix && <span className="text-sm text-neutral-500">{suffix}</span>}
+        {suffix && <span className="text-sm text-neutral-400">{suffix}</span>}
       </div>
 
       {helperText && (
@@ -189,12 +190,12 @@ function SelectField<T extends string>({
 
   return (
     <label className="flex flex-col gap-2">
-      <span className="text-sm text-neutral-300">{label}</span>
+      <span className="text-sm font-medium text-neutral-700">{label}</span>
 
       <select
         value={value}
         onChange={(event) => onChange(event.target.value as T)}
-        className="rounded-2xl border border-neutral-800 bg-neutral-950/70 px-4 py-3 text-base text-neutral-100 outline-none"
+        className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-950 shadow-sm outline-none transition focus:border-emerald-600/40 focus:ring-4 focus:ring-emerald-600/10"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -204,7 +205,7 @@ function SelectField<T extends string>({
       </select>
 
       {selectedOption?.description && (
-        <span className="text-xs leading-5 text-emerald-300/80">
+        <span className="text-xs leading-5 text-emerald-700">
           {selectedOption.description}
         </span>
       )}
@@ -224,15 +225,23 @@ function StepPresetButtons({
   onSelect: (value: number) => void;
 }) {
   return (
-    <div className="rounded-2xl border border-neutral-800 bg-neutral-950/40 p-4">
-      <p className="text-sm font-medium text-neutral-200">
-        Nu stii cati pasi faci?
-      </p>
+    <div className="rounded-3xl border border-neutral-200 bg-neutral-50/80 p-5">
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+          <MinimalIcon name="steps" className="h-5 w-5" />
+        </div>
 
-      <p className="mt-2 text-xs leading-5 text-neutral-500">
-        Alege o estimare conservatoare. Daca ai telefon sau ceas, foloseste
-        media reala pe 7-14 zile.
-      </p>
+        <div>
+          <p className="text-sm font-semibold text-neutral-950">
+            Nu stii cati pasi faci?
+          </p>
+
+          <p className="mt-2 text-xs leading-5 text-neutral-500">
+            Alege o estimare conservatoare. Daca ai telefon sau ceas, foloseste
+            media reala pe 7-14 zile.
+          </p>
+        </div>
+      </div>
 
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         {stepPresets.map((preset) => {
@@ -245,14 +254,14 @@ function StepPresetButtons({
               onClick={() => onSelect(preset.value)}
               className={
                 isSelected
-                  ? "rounded-2xl border border-emerald-700 bg-emerald-950/50 p-3 text-left"
-                  : "rounded-2xl border border-neutral-800 bg-neutral-900 p-3 text-left transition hover:border-neutral-700"
+                  ? "rounded-2xl border border-emerald-700/30 bg-emerald-50 p-3 text-left shadow-sm"
+                  : "rounded-2xl border border-neutral-200 bg-white p-3 text-left shadow-sm transition hover:border-emerald-700/20 hover:bg-emerald-50/40"
               }
             >
-              <span className="block text-sm font-medium text-neutral-100">
+              <span className="block text-sm font-semibold text-neutral-950">
                 {preset.label}
               </span>
-              <span className="mt-1 block text-sm text-emerald-300">
+              <span className="mt-1 block text-sm font-semibold text-emerald-700">
                 {formatSteps(preset.value)}
               </span>
               <span className="mt-1 block text-xs leading-5 text-neutral-500">
@@ -334,31 +343,39 @@ export function CalculatorForm() {
     <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
       <form
         onSubmit={handleSubmit}
-        className="rounded-3xl border border-neutral-800 bg-neutral-900/80 p-5 shadow-2xl md:p-6"
+        className="rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-7"
       >
-        <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-emerald-400">
-            Date utilizator
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold">Calculator</h2>
-          <p className="mt-3 text-sm leading-6 text-neutral-400">
-            Completeaza datele principale. Rezultatul este o estimare de
-            pornire, nu o valoare fixa.
-          </p>
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+              Date utilizator
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-neutral-950">
+              Calculator
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">
+              Completeaza datele principale. Rezultatul este o estimare de
+              pornire, nu o valoare fixa.
+            </p>
+          </div>
+
+          <div className="w-fit rounded-full border border-emerald-700/15 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-800">
+            Input personalizat
+          </div>
         </div>
 
         {errorMessage && (
-          <div className="mt-5 rounded-2xl border border-amber-700 bg-amber-950/40 p-4">
-            <p className="text-sm font-medium text-amber-100">
+          <div className="mt-5 rounded-3xl border border-amber-200 bg-amber-50 p-4">
+            <p className="text-sm font-semibold text-amber-950">
               Verifica datele introduse
             </p>
-            <p className="mt-1 text-sm leading-6 text-amber-100/80">
+            <p className="mt-1 text-sm leading-6 text-amber-900/75">
               {errorMessage}
             </p>
           </div>
         )}
 
-        <div className="mt-6 grid gap-4">
+        <div className="mt-6 grid gap-5">
           <SelectField<Sex>
             label="Sex"
             value={input.sex}
@@ -438,17 +455,25 @@ export function CalculatorForm() {
             onSelect={(value) => updateInput("averageStepsPerDay", value)}
           />
 
-          <div className="rounded-3xl border border-neutral-800 bg-neutral-950/40 p-4">
-            <h3 className="text-base font-semibold text-neutral-100">
-              Antrenamente
-            </h3>
+          <div className="rounded-[2rem] border border-neutral-200 bg-neutral-50/80 p-5">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky-50 text-sky-700">
+                <MinimalIcon name="training" className="h-5 w-5" />
+              </div>
 
-            <p className="mt-2 text-sm leading-6 text-neutral-400">
-              Daca nu te antrenezi momentan, seteaza 0. Calculatorul va exclude
-              automat caloriile din antrenamente.
-            </p>
+              <div>
+                <h3 className="text-base font-semibold text-neutral-950">
+                  Antrenamente
+                </h3>
 
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                <p className="mt-2 text-sm leading-6 text-neutral-600">
+                  Daca nu te antrenezi momentan, seteaza 0. Calculatorul va
+                  exclude automat caloriile din antrenamente.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <NumberField
                 label="Antrenamente / saptamana"
                 value={input.workoutsPerWeek}
@@ -474,18 +499,18 @@ export function CalculatorForm() {
             </div>
 
             {!hasTraining && (
-              <div className="mt-4 rounded-2xl border border-neutral-800 bg-neutral-900 p-4">
-                <p className="text-sm leading-6 text-neutral-400">
+              <div className="mt-4 rounded-3xl border border-neutral-200 bg-white p-4">
+                <p className="text-sm leading-6 text-neutral-600">
                   Pentru acest profil, antrenamentele sunt calculate ca{" "}
-                  <span className="font-medium text-neutral-200">0 kcal</span>.
-                  TDEE-ul va fi estimat doar din BMR, activitate zilnica, pasi
-                  si tipul de job.
+                  <span className="font-semibold text-neutral-950">0 kcal</span>
+                  . TDEE-ul va fi estimat doar din BMR, activitate zilnica,
+                  pasi si tipul de job.
                 </p>
               </div>
             )}
 
             {hasTraining && (
-              <div className="mt-4 grid gap-4">
+              <div className="mt-5 grid gap-4">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <SelectField<TrainingType>
                     label="Tip antrenament"
@@ -508,8 +533,8 @@ export function CalculatorForm() {
                   />
                 </div>
 
-                <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4">
-                  <p className="text-sm leading-6 text-neutral-400">
+                <div className="rounded-3xl border border-sky-100 bg-sky-50/70 p-4">
+                  <p className="text-sm leading-6 text-sky-950/75">
                     Intensitatea este o estimare. Pentru majoritatea oamenilor,
                     „moderata” este alegerea potrivita daca antrenamentul este
                     solicitant, dar sustenabil. Alege „ridicata” doar daca
@@ -523,7 +548,7 @@ export function CalculatorForm() {
           <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
             <button
               type="submit"
-              className="rounded-2xl bg-emerald-500 px-5 py-4 text-base font-semibold text-neutral-950 transition hover:bg-emerald-400"
+              className="rounded-2xl bg-emerald-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-emerald-600"
             >
               Calculeaza rezultatul
             </button>
@@ -531,7 +556,7 @@ export function CalculatorForm() {
             <button
               type="button"
               onClick={handleReset}
-              className="rounded-2xl border border-neutral-700 px-5 py-4 text-base font-semibold text-neutral-200 transition hover:border-neutral-500 hover:bg-neutral-800"
+              className="rounded-2xl border border-neutral-200 bg-white px-5 py-4 text-base font-semibold text-neutral-700 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50"
             >
               Reseteaza
             </button>
