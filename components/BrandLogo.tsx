@@ -2,6 +2,10 @@
 
 import Image from "next/image";
 
+const gymWebsiteUrl = "https://salabrick.ro/";
+const instagramUrl =
+  "https://www.instagram.com/alecsmihai?igsh=YjQ2MHB1dXpsc3hq&utm_source=qr";
+
 type BrandLogoProps = {
   variant?: "hero" | "footer";
 };
@@ -10,7 +14,13 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
   if (variant === "footer") {
     return (
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="relative h-20 w-56 overflow-hidden rounded-2xl border border-neutral-800 bg-white shadow-lg shadow-black/30">
+        <a
+          href={gymWebsiteUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Deschide site-ul Sala Brick Fitness Brothers"
+          className="relative h-20 w-56 overflow-hidden rounded-2xl border border-neutral-800 bg-white shadow-lg shadow-black/30 transition hover:-translate-y-0.5 hover:border-emerald-500/40 hover:shadow-emerald-950/20"
+        >
           <Image
             src="/sala-brick-logo.png"
             alt="Sala Brick Fitness Brothers logo"
@@ -18,7 +28,7 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
             sizes="224px"
             className="object-contain p-3"
           />
-        </div>
+        </a>
 
         <div>
           <p className="text-sm font-medium text-neutral-300">
@@ -27,6 +37,14 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
           <p className="mt-1 text-xs leading-5 text-neutral-600">
             Estimari realiste, explicatii simple si ajustari treptate.
           </p>
+          <a
+            href={gymWebsiteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex text-xs font-medium text-emerald-400 transition hover:text-emerald-300"
+          >
+            salabrick.ro
+          </a>
         </div>
       </div>
     );
@@ -54,7 +72,16 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
           by Alexandru Mihai
         </p>
 
-        <p className="mt-2 max-w-xl text-sm leading-6 text-neutral-400">
+        <a
+          href={instagramUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex rounded-full border border-neutral-800 bg-neutral-950/60 px-3 py-1.5 text-sm font-medium text-neutral-300 transition hover:border-emerald-500/40 hover:text-emerald-300"
+        >
+          Instagram: @alecsmihai
+        </a>
+
+        <p className="mt-3 max-w-xl text-sm leading-6 text-neutral-400">
           Calculator BMR / TDEE construit pentru estimari realiste, clare si
           usor de folosit.
         </p>
