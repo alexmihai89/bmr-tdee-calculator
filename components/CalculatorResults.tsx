@@ -146,7 +146,37 @@ function formatHydrationRange(result: CalorieCalculatorResult): string {
   )} - ${formatLiters(result.hydration.dailyWaterLitersRange.max)} L`;
 }
 
-function buildCopiedResultText(result: CalorieCalculatorResult): string {
+function buildCompactResultText(result: CalorieCalculatorResult): string {
+  const rhythm =
+    result.input.goal === "maintenance"
+      ? "mentinere"
+      : `${formatKilograms(
+          Math.abs(result.estimatedMonthlyWeightChangeKg)
+        )} / luna`;
+
+  return [
+    "AM Calorie Calculator",
+    "",
+    `Obiectiv: ${getGoalLabel(result.input.goal)}`,
+    `Target caloric: ${formatCaloriesPerDay(result.targetCalories)}`,
+    `TDEE estimat: ${formatCaloriesPerDay(result.estimatedTdee)}`,
+    `Interval realist: ${formatCalorieRange(result.realisticCalorieRange)}`,
+    `Ritm estimativ: ${rhythm}`,
+    `Hidratare: ${formatHydrationRange(result)} / zi`,
+    "",
+    result.macros
+      ? `Macro-uri: ${formatGrams(
+          result.macros.proteinGrams
+        )} proteine / ${formatGrams(
+          result.macros.fatGrams
+        )} grasimi / ${formatGrams(result.macros.carbohydrateGrams)} carbohidrati`
+      : "Macro-uri: indisponibile",
+    "",
+    "Nota: valorile sunt estimari de pornire si se ajusteaza dupa 2-3 saptamani in functie de progres, energie, aderenta si performanta.",
+  ].join("\n");
+}
+
+function buildFullResultText(result: CalorieCalculatorResult): string {
   const rhythm =
     result.input.goal === "maintenance"
       ? "mentinere"
@@ -169,7 +199,8 @@ function buildCopiedResultText(result: CalorieCalculatorResult): string {
     : "Macro-uri: indisponibile";
 
   return [
-    "Rezultat estimativ BMR / TDEE / calorii tinta",
+    "AM Calorie Calculator",
+    "Raport estimativ BMR / TDEE / calorii tinta",
     "",
     `Obiectiv: ${getGoalLabel(result.input.goal)}`,
     `Target caloric recomandat: ${formatCaloriesPerDay(result.targetCalories)}`,
@@ -197,36 +228,85 @@ function buildCopiedResultText(result: CalorieCalculatorResult): string {
       result.trainingCalories
     )} / zi, medie saptamanala`,
     "",
+    "Explicatie:",
+    result.explanation.summary,
+    "",
+    result.explanation.adjustmentAdvice,
+    "",
+    result.explanation.safetyNote,
+    "",
     "Nota: valorile sunt estimari de pornire. Ajustarea se face dupa 2-3 saptamani in functie de progres, energie, aderenta si performanta.",
   ].join("\n");
 }
 
-function CopyResultButton({ result }: { result: CalorieCalculatorResult }) {
-  const [copied, setCopied] = useState(false);
+function ShareActions({ result }: { result: CalorieCalculatorResult }) {
+  const [copiedType, setCopiedType] = useState<"compact" | "full" | null>(null);
 
-  async function handleCopy() {
-    const text = buildCopiedResultText(result);
+  async function copyText(type: "compact" | "full") {
+    const text =
+      type === "compact"
+        ? buildCompactResultText(result)
+        : buildFullResultText(result);
 
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(true);
+      setCopiedType(type);
 
       window.setTimeout(() => {
-        setCopied(false);
+        setCopiedType(null);
       }, 1800);
     } catch {
-      setCopied(false);
+      setCopiedType(null);
     }
   }
 
+  function handlePrint() {
+    window.print();
+  }
+
   return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      className="rounded-2xl border border-emerald-700/20 bg-white px-4 py-3 text-sm font-semibold text-emerald-800 shadow-sm transition hover:border-emerald-700/35 hover:bg-emerald-50"
-    >
-      {copied ? "Rezultat copiat" : "Copiaza rezultatul"}
-    </button>
+    <div className="rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+          <MinimalIcon name="info" className="h-5 w-5" />
+        </div>
+
+        <div>
+          <p className="text-sm font-semibold text-neutral-950">
+            Share rezultat
+          </p>
+          <p className="mt-1 text-xs leading-5 text-neutral-500">
+            Copiaza un rezumat scurt, raportul complet sau printeaza pagina.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-2">
+        <button
+          type="button"
+          onClick={() => copyText("compact")}
+          className="rounded-2xl border border-emerald-700/20 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 transition hover:border-emerald-700/35 hover:bg-emerald-100"
+        >
+          {copiedType === "compact" ? "Rezumat copiat" : "Copiaza rezumat"}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => copyText("full")}
+          className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-emerald-700/25 hover:bg-emerald-50/50"
+        >
+          {copiedType === "full" ? "Raport copiat" : "Copiaza raport complet"}
+        </button>
+
+        <button
+          type="button"
+          onClick={handlePrint}
+          className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50"
+        >
+          Printeaza / salveaza PDF
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -285,7 +365,7 @@ function SummaryPanel({ result }: { result: CalorieCalculatorResult }) {
             </p>
           </div>
 
-          <CopyResultButton result={result} />
+          <ShareActions result={result} />
         </div>
       </div>
 

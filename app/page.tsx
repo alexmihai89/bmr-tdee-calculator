@@ -177,20 +177,76 @@ export default function Home() {
           </div>
         </div>
 
-        <footer className="border-t border-neutral-200 pt-6">
-          <div className="flex flex-col gap-5 text-sm leading-6 text-neutral-500 md:flex-row md:items-center md:justify-between">
-            <BrandLogo variant="footer" />
-
-            <div className="max-w-2xl md:text-right">
-              <p>
-                Rezultatele sunt estimari orientative si nu inlocuiesc evaluarea
-                medicala sau nutritionala individuala.
+        <footer className="rounded-[2rem] border border-neutral-200 bg-white/85 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.06)] backdrop-blur md:p-7">
+          <div className="grid gap-6 lg:grid-cols-[1fr_1fr_1fr] lg:items-start">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                AM Calorie Calculator
               </p>
 
-              <p className="mt-1 text-neutral-400">
-                AM Calorie Calculator by Alexandru Mihai.
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-neutral-950">
+                Nutritie, activitate si progres intr-un format clar.
+              </h2>
+
+              <p className="mt-3 text-sm leading-6 text-neutral-500">
+                Creat pentru clienti de sala si populatia generala care vor
+                estimari realiste, nu promisiuni rapide.
               </p>
             </div>
+
+            <div className="rounded-3xl border border-neutral-200 bg-neutral-50/80 p-4">
+              <p className="text-sm font-semibold text-neutral-950">
+                Branding & contacte
+              </p>
+
+              <div className="mt-4 flex flex-col gap-3">
+                <a
+                  href="https://www.instagram.com/alecsmihai?igsh=YjQ2MHB1dXpsc3hq&utm_source=qr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-emerald-700/25 hover:bg-emerald-50/50"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                    <MinimalIcon name="info" className="h-4 w-4" />
+                  </span>
+                  Instagram: @alecsmihai
+                </a>
+
+                <a
+                  href="https://salabrick.ro/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-emerald-700/25 hover:bg-emerald-50/50"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                    <MinimalIcon name="activity" className="h-4 w-4" />
+                  </span>
+                  salabrick.ro
+                </a>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-neutral-200 bg-neutral-50/80 p-4">
+              <BrandLogo variant="footer" />
+
+              <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50/80 p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white text-amber-700">
+                    <MinimalIcon name="shield" className="h-4 w-4" />
+                  </div>
+
+                  <p className="text-xs leading-5 text-amber-900/80">
+                    Rezultatele sunt estimari orientative si nu inlocuiesc
+                    evaluarea medicala sau nutritionala individuala.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-3 border-t border-neutral-200 pt-5 text-xs leading-5 text-neutral-400 md:flex-row md:items-center md:justify-between">
+            <p>© AM Calorie Calculator by Alexandru Mihai.</p>
+            <p>Un punct de pornire clar pentru nutritie, activitate si progres.</p>
           </div>
         </footer>
       </section>

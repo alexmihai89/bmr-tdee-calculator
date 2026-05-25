@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CalculatorResults } from "@/components/CalculatorResults";
 import { MinimalIcon } from "@/components/MinimalIcon";
 import { calculateCalories } from "@/lib/calorieCalculator";
@@ -391,6 +391,7 @@ export function CalculatorForm() {
     calculateCalories(initialInput)
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const resultSectionRef = useRef<HTMLDivElement | null>(null);
 
   const hasTraining = input.workoutsPerWeek > 0;
 
@@ -423,6 +424,15 @@ export function CalculatorForm() {
     }
   }
 
+  function scrollToResults() {
+    window.setTimeout(() => {
+      resultSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 80);
+  }
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -430,6 +440,7 @@ export function CalculatorForm() {
       const calculatedResult = calculateCalories(input);
       setResult(calculatedResult);
       setErrorMessage(null);
+      scrollToResults();
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
     }
@@ -439,6 +450,7 @@ export function CalculatorForm() {
     setInput(initialInput);
     setResult(calculateCalories(initialInput));
     setErrorMessage(null);
+    scrollToResults();
   }
 
   return (
@@ -692,7 +704,9 @@ export function CalculatorForm() {
         </div>
       </form>
 
-      <CalculatorResults result={result} />
+      <div ref={resultSectionRef} className="scroll-mt-6 md:scroll-mt-10">
+        <CalculatorResults result={result} />
+      </div>
     </div>
   );
 }
