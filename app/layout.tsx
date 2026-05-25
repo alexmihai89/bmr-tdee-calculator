@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "AM Calorie Calculator | BMR, TDEE si Macro-uri",
   description:
-    "Calculator simplu pentru estimarea BMR, TDEE, calorii tinta si macro-uri in functie de activitate zilnica, pasi, job, antrenamente si obiectiv.",
+    "Calculator simplu pentru estimarea BMR, TDEE, calorii tinta, macro-uri si hidratare in functie de activitate zilnica, pasi, job, antrenamente si obiectiv.",
   keywords: [
     "AM Calorie Calculator",
     "Alexandru Mihai",
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     "calculator TDEE",
     "calculator calorii",
     "macro-uri",
+    "hidratare",
     "slabire",
     "mentinere",
     "masa musculara",
@@ -37,10 +38,31 @@ export const metadata: Metadata = {
     },
   ],
   creator: "Alexandru Mihai",
+  icons: {
+    icon: [
+      {
+        url: "/icon.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+    shortcut: [
+      {
+        url: "/favicon.ico",
+      },
+    ],
+    apple: [
+      {
+        url: "/apple-icon.png",
+        type: "image/png",
+        sizes: "180x180",
+      },
+    ],
+  },
   openGraph: {
     title: "AM Calorie Calculator | BMR, TDEE si Macro-uri",
     description:
-      "Estimeaza BMR, TDEE, calorii tinta si macro-uri pe baza activitatii zilnice, pasilor, jobului si antrenamentelor.",
+      "Estimeaza BMR, TDEE, calorii tinta, macro-uri si hidratare pe baza activitatii zilnice, pasilor, jobului si antrenamentelor.",
     type: "website",
     locale: "ro_RO",
   },
