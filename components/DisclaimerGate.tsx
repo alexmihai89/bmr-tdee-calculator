@@ -2,18 +2,40 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const disclaimerStorageKey = "am-calorie-calculator-disclaimer-accepted";
 
 export function DisclaimerGate({ children }: { children: React.ReactNode }) {
   const [hasAccepted, setHasAccepted] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [hasLoadedPreference, setHasLoadedPreference] = useState(false);
+
+  useEffect(() => {
+    const savedPreference = window.localStorage.getItem(disclaimerStorageKey);
+
+    if (savedPreference === "true") {
+      setHasAccepted(true);
+    }
+
+    setHasLoadedPreference(true);
+  }, []);
 
   function handleContinue() {
     if (!isChecked) {
       return;
     }
 
+    window.localStorage.setItem(disclaimerStorageKey, "true");
     setHasAccepted(true);
+  }
+
+  if (!hasLoadedPreference) {
+    return (
+      <div className="rounded-3xl border border-neutral-800 bg-neutral-900/80 p-5 shadow-2xl md:p-6">
+        <p className="text-sm text-neutral-500">Se incarca...</p>
+      </div>
+    );
   }
 
   if (hasAccepted) {
@@ -46,8 +68,9 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
 
           <p className="mt-2 text-sm leading-6 text-neutral-400">
             Acest calculator ofera estimari orientative pentru BMR, TDEE,
-            calorii tinta si macro-uri. Rezultatele nu reprezinta diagnostic
-            medical, plan alimentar personalizat sau recomandare clinica.
+            calorii tinta, macro-uri si hidratare. Rezultatele nu reprezinta
+            diagnostic medical, plan alimentar personalizat sau recomandare
+            clinica.
           </p>
         </div>
 
