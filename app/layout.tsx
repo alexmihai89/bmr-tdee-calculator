@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://calculator-bmr-tdee.vercel.app/"),
   title: "AM Calorie Calculator | BMR, TDEE si Macro-uri",
   description:
     "Calculator simplu pentru estimarea BMR, TDEE, calorii tinta, macro-uri si hidratare in functie de activitate zilnica, pasi, job, antrenamente si obiectiv.",
@@ -65,6 +66,14 @@ export const metadata: Metadata = {
       "Estimeaza BMR, TDEE, calorii tinta, macro-uri si hidratare pe baza activitatii zilnice, pasilor, jobului si antrenamentelor.",
     type: "website",
     locale: "ro_RO",
+    url: "https://calculator-bmr-tdee.vercel.app/",
+    siteName: "AM Calorie Calculator",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AM Calorie Calculator | BMR, TDEE si Macro-uri",
+    description:
+      "Estimeaza BMR, TDEE, calorii tinta, macro-uri si hidratare pe baza activitatii zilnice, pasilor, jobului si antrenamentelor.",
   },
 };
 
