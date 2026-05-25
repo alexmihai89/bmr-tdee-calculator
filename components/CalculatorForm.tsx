@@ -87,6 +87,42 @@ const trainingIntensityGuidance: Record<TrainingIntensity, string> = {
     "Ridicata: efort greu, respiratie puternica, pauze mai necesare, senzatie clara de solicitare mare.",
 };
 
+function SectionHeader({
+  number,
+  title,
+  description,
+  icon,
+}: {
+  number: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-3xl border border-neutral-200 bg-neutral-50/80 p-4">
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
+          {icon}
+        </div>
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
+            {number}
+          </p>
+
+          <h3 className="mt-1 text-base font-semibold text-neutral-950">
+            {title}
+          </h3>
+
+          <p className="mt-1 text-xs leading-5 text-neutral-500">
+            {description}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function NumberField({
   label,
   value,
@@ -214,6 +250,72 @@ function SelectField<T extends string>({
         <span className="text-xs leading-5 text-neutral-500">{helperText}</span>
       )}
     </label>
+  );
+}
+
+function GoalCardSelector({
+  value,
+  onChange,
+}: {
+  value: Goal;
+  onChange: (value: Goal) => void;
+}) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {GOAL_OPTIONS.map((option) => {
+        const isSelected = value === option.value;
+
+        return (
+          <button
+            key={option.value}
+            type="button"
+            onClick={() => onChange(option.value)}
+            className={
+              isSelected
+                ? "rounded-3xl border border-emerald-700/30 bg-emerald-50 p-4 text-left shadow-sm"
+                : "rounded-3xl border border-neutral-200 bg-white p-4 text-left shadow-sm transition hover:border-emerald-700/20 hover:bg-emerald-50/40"
+            }
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p
+                  className={
+                    isSelected
+                      ? "text-sm font-semibold text-emerald-900"
+                      : "text-sm font-semibold text-neutral-950"
+                  }
+                >
+                  {option.label}
+                </p>
+
+                <p
+                  className={
+                    isSelected
+                      ? "mt-2 text-xs leading-5 text-emerald-900/75"
+                      : "mt-2 text-xs leading-5 text-neutral-500"
+                  }
+                >
+                  {option.description}
+                </p>
+              </div>
+
+              <div
+                className={
+                  isSelected
+                    ? "flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700"
+                    : "flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-neutral-50 text-neutral-400"
+                }
+              >
+                <MinimalIcon
+                  name={isSelected ? "check" : "target"}
+                  className="h-4 w-4"
+                />
+              </div>
+            </div>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -375,7 +477,14 @@ export function CalculatorForm() {
           </div>
         )}
 
-        <div className="mt-6 grid gap-5">
+        <div className="mt-6 grid gap-6">
+          <SectionHeader
+            number="01"
+            title="Date personale"
+            description="Aceste informatii sunt folosite pentru estimarea BMR prin formula Mifflin-St Jeor."
+            icon={<MinimalIcon name="calculator" className="h-5 w-5" />}
+          />
+
           <SelectField<Sex>
             label="Sex"
             value={input.sex}
@@ -415,11 +524,23 @@ export function CalculatorForm() {
             />
           </div>
 
-          <SelectField<Goal>
-            label="Obiectiv"
+          <SectionHeader
+            number="02"
+            title="Obiectiv"
+            description="Alege directia principala. Calculatorul va seta deficitul, mentinerea sau surplusul intr-un mod conservator."
+            icon={<MinimalIcon name="target" className="h-5 w-5" />}
+          />
+
+          <GoalCardSelector
             value={input.goal}
-            options={GOAL_OPTIONS}
             onChange={(value) => updateInput("goal", value)}
+          />
+
+          <SectionHeader
+            number="03"
+            title="Activitate zilnica"
+            description="Pasii, jobul si miscarea generala sunt estimate separat pentru un TDEE mai realist."
+            icon={<MinimalIcon name="steps" className="h-5 w-5" />}
           />
 
           <SelectField<DailyActivityLevel>
@@ -453,6 +574,13 @@ export function CalculatorForm() {
           <StepPresetButtons
             currentSteps={input.averageStepsPerDay}
             onSelect={(value) => updateInput("averageStepsPerDay", value)}
+          />
+
+          <SectionHeader
+            number="04"
+            title="Antrenamente"
+            description="Antrenamentele sunt calculate separat si apoi transformate in medie zilnica saptamanala."
+            icon={<MinimalIcon name="training" className="h-5 w-5" />}
           />
 
           <div className="rounded-[2rem] border border-neutral-200 bg-neutral-50/80 p-5">

@@ -19,7 +19,7 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Deschide site-ul Sala Brick Fitness Brothers"
-          className="relative h-20 w-56 overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-[0_16px_50px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-emerald-700/30 hover:shadow-[0_20px_70px_rgba(22,101,52,0.14)]"
+          className="relative h-16 w-48 overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-[0_16px_50px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-emerald-700/30 hover:shadow-[0_20px_70px_rgba(22,101,52,0.14)] sm:h-20 sm:w-56"
         >
           <Image
             src="/sala-brick-logo.png"
@@ -53,8 +53,8 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
   }
 
   return (
-    <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-      <div className="relative h-36 w-36 overflow-hidden rounded-[2rem] border border-neutral-200 bg-white shadow-[0_20px_70px_rgba(15,23,42,0.10)] sm:h-44 sm:w-44">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+      <div className="relative h-28 w-28 overflow-hidden rounded-[1.75rem] border border-neutral-200 bg-white shadow-[0_20px_70px_rgba(15,23,42,0.10)] sm:h-44 sm:w-44 sm:rounded-[2rem]">
         <Image
           src="/am-logo.png"
           alt="Alexandru Mihai logo"
@@ -66,7 +66,7 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
       </div>
 
       <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-700">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700 sm:text-sm">
           AM Calorie Calculator
         </p>
 
