@@ -31,6 +31,30 @@ export function formatPercent(value: number): string {
   return `${Math.round(value).toLocaleString("ro-RO")}%`;
 }
 
+export function formatSignedCaloriesPerDay(value: number): string {
+  const rounded = Math.round(value);
+
+  if (rounded === 0) {
+    return "0 kcal / zi";
+  }
+
+  const sign = rounded > 0 ? "+" : "−";
+
+  return `${sign}${Math.abs(rounded).toLocaleString("ro-RO")} kcal / zi`;
+}
+
+export function formatSignedPercent(value: number): string {
+  const rounded = Math.round(value);
+
+  if (rounded === 0) {
+    return "0%";
+  }
+
+  const sign = rounded > 0 ? "+" : "−";
+
+  return `${sign}${Math.abs(rounded).toLocaleString("ro-RO")}%`;
+}
+
 export function formatCalorieRange(params: {
   min: number;
   max: number;

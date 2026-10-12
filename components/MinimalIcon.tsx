@@ -32,6 +32,8 @@ export function MinimalIcon({
     strokeWidth: 1.8,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+    focusable: false,
   };
 
   if (name === "calculator") {

@@ -191,6 +191,6 @@ export function calculateGoalTarget(input: GoalInput): GoalResult {
     calorieDifferenceFromTdee,
     calorieDifferencePercent,
     estimatedMonthlyWeightChangeKg,
-    warning: warnings[0],
+    warnings,
   };
 }

@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AM Calorie Calculator — BMR / TDEE / Macro
 
-## Getting Started
+Calculator web pentru estimarea necesarului caloric zilnic: BMR, TDEE, target
+caloric pe obiectiv, macro-uri și hidratare. Gândit pentru clienți de sală și
+populația generală, cu accent pe estimări realiste, explicații clare și un ton
+fără promisiuni rapide. Totul rulează client-side; nu se colectează date.
 
-First, run the development server:
+## Stack
+
+- [Next.js](https://nextjs.org) 16 (App Router, Turbopack)
+- React 19, TypeScript 5
+- Tailwind CSS v4
+
+Fără dependențe runtime suplimentare și fără backend.
+
+## Dezvoltare
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # build de productie
+npm run lint    # ESLint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Structura
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `lib/` — motorul de calcul, pur și tipat, fără dependențe de React:
+  - `bmrEngine` — BMR prin formula **Mifflin-St Jeor**.
+  - `activityEngine` — calorii din pași, job și mișcare generală, cu factori de
+    suprapunere pentru a evita dubla numărare.
+  - `trainingEngine` — calorii din antrenamente, mediate pe săptămână.
+  - `tdeeEngine` — TDEE ca sumă: BMR + activitate zilnică + antrenament.
+  - `goalEngine` — target pe obiectiv, interval realist, ritm estimat, atenționări.
+  - `macroEngine` — proteine / grăsimi / carbohidrați pe obiectiv.
+  - `calorieCalculator` — orchestratorul care compune rezultatul final.
+- `components/` — formularul, afișarea rezultatelor, gate-ul de disclaimer, iconuri.
+- `app/` — pagina, layout-ul (metadata SEO/OG) și imaginea OpenGraph.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Model de calcul
 
-## Learn More
+Spre deosebire de abordarea clasică `TDEE = BMR × factor de activitate`,
+aplicația folosește un **model aditiv**: însumează separat BMR, activitatea
+zilnică (pași + job + mișcare generală) și antrenamentele, cu factori de
+suprapunere care reduc dubla numărare dintre acești termeni.
 
-To learn more about Next.js, take a look at the following resources:
+> Notă: constantele de activitate (kcal/kg pe nivel și pe tip de job, pragurile
+> de suprapunere, kcal/pas) sunt euristice, calibrate conservator pentru a
+> reduce riscul de supraestimare. Nu provin dintr-o singură sursă publicată și
+> trebuie tratate ca estimări, nu ca valori validate clinic.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Rezultatele sunt estimări educaționale, nu diagnostic medical sau plan
+alimentar personalizat.

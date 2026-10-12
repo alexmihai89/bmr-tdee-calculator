@@ -2,44 +2,52 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { MinimalIcon } from "@/components/MinimalIcon";
 
 const disclaimerStorageKey = "am-calorie-calculator-disclaimer-accepted";
 
+function subscribeToDisclaimer(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function readDisclaimerAccepted() {
+  try {
+    return window.localStorage.getItem(disclaimerStorageKey) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function readServerDisclaimerAccepted() {
+  return false;
+}
+
 export function DisclaimerGate({ children }: { children: React.ReactNode }) {
-  const [hasAccepted, setHasAccepted] = useState(false);
+  const storedAccepted = useSyncExternalStore(
+    subscribeToDisclaimer,
+    readDisclaimerAccepted,
+    readServerDisclaimerAccepted
+  );
   const [isChecked, setIsChecked] = useState(false);
-  const [hasLoadedPreference, setHasLoadedPreference] = useState(false);
-
-  useEffect(() => {
-    const savedPreference = window.localStorage.getItem(disclaimerStorageKey);
-
-    if (savedPreference === "true") {
-      setHasAccepted(true);
-    }
-
-    setHasLoadedPreference(true);
-  }, []);
+  const [sessionAccepted, setSessionAccepted] = useState(false);
 
   function handleContinue() {
     if (!isChecked) {
       return;
     }
 
-    window.localStorage.setItem(disclaimerStorageKey, "true");
-    setHasAccepted(true);
+    try {
+      window.localStorage.setItem(disclaimerStorageKey, "true");
+    } catch {
+      // Ignore storage errors (e.g. private mode); the session flag still unlocks the calculator.
+    }
+
+    setSessionAccepted(true);
   }
 
-  if (!hasLoadedPreference) {
-    return (
-      <div className="rounded-[2rem] border border-neutral-200 bg-white/85 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.06)] backdrop-blur md:p-6">
-        <p className="text-sm text-neutral-500">Se incarca...</p>
-      </div>
-    );
-  }
-
-  if (hasAccepted) {
+  if (storedAccepted || sessionAccepted) {
     return <>{children}</>;
   }
 

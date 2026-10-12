@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { CalculatorResults } from "@/components/CalculatorResults";
 import { MinimalIcon } from "@/components/MinimalIcon";
 import { calculateCalories } from "@/lib/calorieCalculator";
@@ -123,6 +123,12 @@ function SectionHeader({
   );
 }
 
+function formatFieldNumber(value: number): string {
+  return Number.isInteger(value)
+    ? String(value)
+    : String(value).replace(".", ",");
+}
+
 function NumberField({
   label,
   value,
@@ -131,6 +137,7 @@ function NumberField({
   max,
   suffix,
   helperText,
+  allowDecimal = false,
 }: {
   label: string;
   value: number;
@@ -139,23 +146,42 @@ function NumberField({
   max?: number;
   suffix?: string;
   helperText?: string;
+  allowDecimal?: boolean;
 }) {
-  const [draftValue, setDraftValue] = useState(String(value));
+  const [draftValue, setDraftValue] = useState(formatFieldNumber(value));
+  const [adjustmentNote, setAdjustmentNote] = useState<string | null>(null);
+  const [lastSyncedValue, setLastSyncedValue] = useState(value);
 
-  useEffect(() => {
-    setDraftValue(String(value));
-  }, [value]);
+  const fieldId = useId();
+  const helperId = `${fieldId}-helper`;
+  const noteId = `${fieldId}-note`;
+
+  // Sync the external value into the draft (e.g. on reset) without an effect.
+  if (value !== lastSyncedValue) {
+    setLastSyncedValue(value);
+    setDraftValue(formatFieldNumber(value));
+  }
+
+  function parseDraft(raw: string): number {
+    return Number(raw.replace(",", "."));
+  }
 
   function handleChange(rawValue: string) {
-    const onlyNumbers = rawValue.replace(/[^\d]/g, "");
+    const sanitized = allowDecimal
+      ? rawValue.replace(/[^\d.,]/g, "").replace(/([.,]).*?([.,])/g, "$1")
+      : rawValue.replace(/[^\d]/g, "");
 
-    setDraftValue(onlyNumbers);
+    setDraftValue(sanitized);
 
-    if (onlyNumbers === "") {
+    if (adjustmentNote) {
+      setAdjustmentNote(null);
+    }
+
+    if (sanitized === "" || sanitized === "," || sanitized === ".") {
       return;
     }
 
-    const numericValue = Number(onlyNumbers);
+    const numericValue = parseDraft(sanitized);
 
     if (!Number.isFinite(numericValue)) {
       return;
@@ -165,45 +191,84 @@ function NumberField({
   }
 
   function handleBlur() {
-    if (draftValue === "") {
+    if (draftValue === "" || draftValue === "," || draftValue === ".") {
       const fallbackValue = min ?? 0;
-      setDraftValue(String(fallbackValue));
+      setDraftValue(formatFieldNumber(fallbackValue));
       onChange(fallbackValue);
+      setAdjustmentNote(
+        `Câmp gol, am folosit valoarea minimă de ${formatFieldNumber(
+          fallbackValue
+        )}${suffix ? ` ${suffix}` : ""}.`
+      );
       return;
     }
 
-    let numericValue = Number(draftValue);
+    let numericValue = parseDraft(draftValue);
+    let note: string | null = null;
 
     if (typeof min === "number" && numericValue < min) {
       numericValue = min;
+      note = `Valoarea a fost ajustată la minimul de ${formatFieldNumber(min)}${
+        suffix ? ` ${suffix}` : ""
+      }.`;
     }
 
     if (typeof max === "number" && numericValue > max) {
       numericValue = max;
+      note = `Valoarea a fost ajustată la maximul de ${formatFieldNumber(max)}${
+        suffix ? ` ${suffix}` : ""
+      }.`;
     }
 
-    setDraftValue(String(numericValue));
+    setDraftValue(formatFieldNumber(numericValue));
+    setAdjustmentNote(note);
     onChange(numericValue);
   }
+
+  const describedBy =
+    [helperText ? helperId : null, adjustmentNote ? noteId : null]
+      .filter(Boolean)
+      .join(" ") || undefined;
 
   return (
     <label className="flex flex-col gap-2">
       <span className="text-sm font-medium text-neutral-700">{label}</span>
 
-      <div className="flex items-center rounded-2xl border border-neutral-200 bg-white px-4 shadow-sm transition focus-within:border-emerald-600/40 focus-within:ring-4 focus-within:ring-emerald-600/10">
+      <div
+        className={
+          adjustmentNote
+            ? "flex items-center rounded-2xl border border-amber-300 bg-white px-4 shadow-sm transition focus-within:border-amber-400 focus-within:ring-4 focus-within:ring-amber-500/10"
+            : "flex items-center rounded-2xl border border-neutral-200 bg-white px-4 shadow-sm transition focus-within:border-emerald-600/40 focus-within:ring-4 focus-within:ring-emerald-600/10"
+        }
+      >
         <input
           type="text"
-          inputMode="numeric"
+          inputMode={allowDecimal ? "decimal" : "numeric"}
+          enterKeyHint="done"
           value={draftValue}
           onChange={(event) => handleChange(event.target.value)}
           onBlur={handleBlur}
+          aria-describedby={describedBy}
           className="w-full bg-transparent py-3 text-base text-neutral-950 outline-none"
         />
         {suffix && <span className="text-sm text-neutral-400">{suffix}</span>}
       </div>
 
       {helperText && (
-        <span className="text-xs leading-5 text-neutral-500">{helperText}</span>
+        <span id={helperId} className="text-xs leading-5 text-neutral-500">
+          {helperText}
+        </span>
+      )}
+
+      {adjustmentNote && (
+        <span
+          id={noteId}
+          role="status"
+          aria-live="polite"
+          className="text-xs leading-5 text-amber-700"
+        >
+          {adjustmentNote}
+        </span>
       )}
     </label>
   );
@@ -261,7 +326,11 @@ function GoalCardSelector({
   onChange: (value: Goal) => void;
 }) {
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div
+      role="radiogroup"
+      aria-label="Obiectiv principal"
+      className="grid gap-3 sm:grid-cols-2"
+    >
       {GOAL_OPTIONS.map((option) => {
         const isSelected = value === option.value;
 
@@ -269,6 +338,8 @@ function GoalCardSelector({
           <button
             key={option.value}
             type="button"
+            role="radio"
+            aria-checked={isSelected}
             onClick={() => onChange(option.value)}
             className={
               isSelected
@@ -391,6 +462,7 @@ export function CalculatorForm() {
     calculateCalories(initialInput)
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isExampleResult, setIsExampleResult] = useState(true);
   const resultSectionRef = useRef<HTMLDivElement | null>(null);
 
   const hasTraining = input.workoutsPerWeek > 0;
@@ -440,6 +512,7 @@ export function CalculatorForm() {
       const calculatedResult = calculateCalories(input);
       setResult(calculatedResult);
       setErrorMessage(null);
+      setIsExampleResult(false);
       scrollToResults();
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
@@ -450,6 +523,7 @@ export function CalculatorForm() {
     setInput(initialInput);
     setResult(calculateCalories(initialInput));
     setErrorMessage(null);
+    setIsExampleResult(true);
     scrollToResults();
   }
 
@@ -479,7 +553,11 @@ export function CalculatorForm() {
         </div>
 
         {errorMessage && (
-          <div className="mt-5 rounded-3xl border border-amber-200 bg-amber-50 p-4">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="mt-5 rounded-3xl border border-amber-200 bg-amber-50 p-4"
+          >
             <p className="text-sm font-semibold text-amber-950">
               Verifica datele introduse
             </p>
@@ -523,6 +601,7 @@ export function CalculatorForm() {
               min={120}
               max={230}
               suffix="cm"
+              allowDecimal
               onChange={(value) => updateInput("heightCm", value)}
             />
 
@@ -532,6 +611,7 @@ export function CalculatorForm() {
               min={35}
               max={250}
               suffix="kg"
+              allowDecimal
               onChange={(value) => updateInput("weightKg", value)}
             />
           </div>
@@ -705,7 +785,7 @@ export function CalculatorForm() {
       </form>
 
       <div ref={resultSectionRef} className="scroll-mt-6 md:scroll-mt-10">
-        <CalculatorResults result={result} />
+        <CalculatorResults result={result} isExampleResult={isExampleResult} />
       </div>
     </div>
   );

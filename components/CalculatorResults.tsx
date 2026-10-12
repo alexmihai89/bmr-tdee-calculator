@@ -12,6 +12,8 @@ import {
   formatGrams,
   formatKilograms,
   formatNumber,
+  formatSignedCaloriesPerDay,
+  formatSignedPercent,
 } from "@/lib/formatters";
 import type { CalorieCalculatorResult } from "@/lib/types";
 
@@ -101,6 +103,74 @@ function MacroCard({
       <p className="mt-2 text-sm leading-6 text-neutral-500">
         interval: {range}
       </p>
+    </div>
+  );
+}
+
+function MacroSplitBar({ result }: { result: CalorieCalculatorResult }) {
+  const macros = result.macros;
+
+  const totalMacroCalories =
+    macros.proteinCalories + macros.fatCalories + macros.carbohydrateCalories;
+
+  if (totalMacroCalories <= 0) {
+    return null;
+  }
+
+  const proteinShare = Math.round(
+    (macros.proteinCalories / totalMacroCalories) * 100
+  );
+  const fatShare = Math.round((macros.fatCalories / totalMacroCalories) * 100);
+  const carbShare = Math.round(
+    (macros.carbohydrateCalories / totalMacroCalories) * 100
+  );
+
+  const barLabel = `Distributie calorii pe macronutrienti: proteine ${proteinShare}%, grasimi ${fatShare}%, carbohidrati ${carbShare}%.`;
+
+  return (
+    <div className="mt-6 rounded-3xl border border-neutral-200 bg-neutral-50/70 p-4">
+      <p className="text-sm font-semibold text-neutral-950">
+        Distributie calorii
+      </p>
+
+      <div
+        role="img"
+        aria-label={barLabel}
+        className="mt-3 flex h-4 overflow-hidden rounded-full bg-neutral-100"
+      >
+        <div
+          className="bg-emerald-700"
+          style={{ width: `${proteinShare}%` }}
+          title={`Proteine ${proteinShare}%`}
+        />
+        <div
+          className="bg-amber-400"
+          style={{ width: `${fatShare}%` }}
+          title={`Grasimi ${fatShare}%`}
+        />
+        <div
+          className="bg-sky-400"
+          style={{ width: `${carbShare}%` }}
+          title={`Carbohidrati ${carbShare}%`}
+        />
+      </div>
+
+      <div className="mt-3 grid gap-2 text-xs text-neutral-500 sm:grid-cols-3">
+        <div className="flex items-center gap-2">
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-700" />
+          Proteine: {proteinShare}%
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+          Grasimi: {fatShare}%
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="h-2.5 w-2.5 rounded-full bg-sky-400" />
+          Carbohidrati: {carbShare}%
+        </div>
+      </div>
     </div>
   );
 }
@@ -349,6 +419,14 @@ function SummaryPanel({ result }: { result: CalorieCalculatorResult }) {
                   )} / luna`}
             </div>
 
+            {result.input.goal !== "maintenance" && (
+              <div className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-600">
+                Fata de TDEE:{" "}
+                {formatSignedCaloriesPerDay(result.calorieDifferenceFromTdee)} (
+                {formatSignedPercent(result.calorieDifferencePercent)})
+              </div>
+            )}
+
             <div className="rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-800">
               Hidratare: {formatHydrationRange(result)} / zi
             </div>
@@ -464,10 +542,18 @@ function ActivityBreakdownBar({ result }: { result: CalorieCalculatorResult }) {
   const training = Math.max(result.trainingCalories, 0);
   const total = Math.max(result.estimatedTdee, 1);
 
+  const bmrShare = Math.round((bmr / total) * 100);
+  const activityShare = Math.round((activity / total) * 100);
+  const trainingShare = Math.round((training / total) * 100);
+
   const bmrPercent = Math.max(8, (bmr / total) * 100);
   const activityPercent = Math.max(4, (activity / total) * 100);
   const trainingPercent =
     training > 0 ? Math.max(4, (training / total) * 100) : 0;
+
+  const barLabel = `Compozitie TDEE: BMR ${bmrShare}%, activitate zilnica ${activityShare}%${
+    training > 0 ? `, antrenamente ${trainingShare}%` : ""
+  }.`;
 
   return (
     <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm">
@@ -487,22 +573,26 @@ function ActivityBreakdownBar({ result }: { result: CalorieCalculatorResult }) {
         </div>
       </div>
 
-      <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-neutral-100">
+      <div
+        role="img"
+        aria-label={barLabel}
+        className="mt-5 flex h-4 overflow-hidden rounded-full bg-neutral-100"
+      >
         <div
           className="bg-emerald-700"
           style={{ width: `${bmrPercent}%` }}
-          title="BMR"
+          title={`BMR ${bmrShare}%`}
         />
         <div
           className="bg-emerald-400"
           style={{ width: `${activityPercent}%` }}
-          title="Activitate"
+          title={`Activitate ${activityShare}%`}
         />
         {trainingPercent > 0 && (
           <div
             className="bg-sky-400"
             style={{ width: `${trainingPercent}%` }}
-            title="Antrenamente"
+            title={`Antrenamente ${trainingShare}%`}
           />
         )}
       </div>
@@ -510,17 +600,19 @@ function ActivityBreakdownBar({ result }: { result: CalorieCalculatorResult }) {
       <div className="mt-4 grid gap-2 text-xs text-neutral-500 sm:grid-cols-3">
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-emerald-700" />
-          BMR: {formatCalories(result.bmr)}
+          BMR: {formatCalories(result.bmr)} · {bmrShare}%
         </div>
 
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-          Activitate: {formatCalories(result.dailyActivityCalories)}
+          Activitate: {formatCalories(result.dailyActivityCalories)} ·{" "}
+          {activityShare}%
         </div>
 
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-sky-400" />
-          Antrenamente: {formatCalories(result.trainingCalories)}
+          Antrenamente: {formatCalories(result.trainingCalories)} ·{" "}
+          {trainingShare}%
         </div>
       </div>
     </div>
@@ -529,11 +621,32 @@ function ActivityBreakdownBar({ result }: { result: CalorieCalculatorResult }) {
 
 export function CalculatorResults({
   result,
+  isExampleResult = false,
 }: {
   result: CalorieCalculatorResult;
+  isExampleResult?: boolean;
 }) {
   return (
     <section className="flex flex-col gap-6">
+      <div className="sticky top-2 z-20 flex items-center justify-between gap-3 rounded-2xl border border-emerald-700/15 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
+        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700">
+          Target
+        </span>
+        <span className="text-base font-semibold text-neutral-950">
+          {formatCaloriesPerDay(result.targetCalories)}
+        </span>
+      </div>
+
+      {isExampleResult && (
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50/80 px-4 py-3">
+          <p className="text-xs leading-5 text-neutral-500">
+            Valorile de mai jos sunt un exemplu, pe baza datelor implicite.
+            Completeaza formularul si apasa „Calculeaza rezultatul” pentru
+            estimarea ta.
+          </p>
+        </div>
+      )}
+
       <SummaryPanel result={result} />
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -613,6 +726,13 @@ export function CalculatorResults({
             suffix="kcal / zi, medie saptamanala"
             icon={<MinimalIcon name="training" className="h-5 w-5" />}
           />
+
+          <ResultCard
+            label="Total saptamanal"
+            value={formatNumber(result.weeklyTrainingCalories)}
+            suffix="kcal / saptamana din antrenamente"
+            icon={<MinimalIcon name="training" className="h-5 w-5" />}
+          />
         </div>
       </div>
 
@@ -685,6 +805,8 @@ export function CalculatorResults({
               icon={<MinimalIcon name="macros" className="h-5 w-5" />}
             />
           </div>
+
+          <MacroSplitBar result={result} />
 
           <p className="mt-5 leading-7 text-neutral-600">
             {result.macros.explanation}
