@@ -7,6 +7,11 @@ import { CalculatorResults } from "@/components/CalculatorResults";
 import { MinimalIcon } from "@/components/MinimalIcon";
 import { calculateCalories } from "@/lib/calorieCalculator";
 import { formatSteps } from "@/lib/formatters";
+import {
+  DEFAULT_INPUT,
+  normalizeStoredInput,
+  parseInputFromQuery,
+} from "@/lib/inputSerialization";
 import type {
   CalorieCalculatorInput,
   CalorieCalculatorResult,
@@ -26,23 +31,45 @@ import {
   TRAINING_TYPE_OPTIONS,
 } from "@/lib/types";
 
-const initialInput: CalorieCalculatorInput = {
-  sex: "male",
-  age: 35,
-  heightCm: 180,
-  weightKg: 80,
+const initialInput: CalorieCalculatorInput = DEFAULT_INPUT;
 
-  goal: "light_fat_loss",
+const lastInputStorageKey = "am-calorie-calculator-last-input";
 
-  dailyActivityLevel: "moderate",
-  averageStepsPerDay: 8000,
-  jobType: "mixed",
+/**
+ * Resolves the input to start from: a shared link wins, then the last saved
+ * input on this device, then the defaults. Runs once, client-side; the form
+ * is gated behind the client-only disclaimer, so there is no SSR mismatch.
+ */
+function resolveInitialInput(): {
+  input: CalorieCalculatorInput;
+  isUserData: boolean;
+} {
+  if (typeof window === "undefined") {
+    return { input: initialInput, isUserData: false };
+  }
 
-  workoutsPerWeek: 4,
-  averageWorkoutDurationMinutes: 60,
-  trainingType: "strength",
-  trainingIntensity: "moderate",
-};
+  const fromQuery = parseInputFromQuery(window.location.search);
+
+  if (fromQuery) {
+    return { input: fromQuery, isUserData: true };
+  }
+
+  try {
+    const saved = window.localStorage.getItem(lastInputStorageKey);
+
+    if (saved) {
+      const parsed = normalizeStoredInput(JSON.parse(saved));
+
+      if (parsed) {
+        return { input: parsed, isUserData: true };
+      }
+    }
+  } catch {
+    // Ignore storage/parse errors and fall back to defaults.
+  }
+
+  return { input: initialInput, isUserData: false };
+}
 
 const stepPresets = [
   {
@@ -88,18 +115,23 @@ const trainingIntensityGuidance: Record<TrainingIntensity, string> = {
 };
 
 function SectionHeader({
+  id,
   number,
   title,
   description,
   icon,
 }: {
+  id?: string;
   number: string;
   title: string;
   description: string;
   icon: React.ReactNode;
 }) {
   return (
-    <div className="rounded-3xl border border-neutral-200 bg-neutral-50/80 p-4">
+    <div
+      id={id}
+      className="scroll-mt-24 rounded-3xl border border-neutral-200 bg-neutral-50/80 p-4"
+    >
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
           {icon}
@@ -457,12 +489,18 @@ function getErrorMessage(error: unknown): string {
 }
 
 export function CalculatorForm() {
-  const [input, setInput] = useState<CalorieCalculatorInput>(initialInput);
+  const [initialResolved] = useState(resolveInitialInput);
+  const [input, setInput] = useState<CalorieCalculatorInput>(
+    initialResolved.input
+  );
   const [result, setResult] = useState<CalorieCalculatorResult>(() =>
-    calculateCalories(initialInput)
+    calculateCalories(initialResolved.input)
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isExampleResult, setIsExampleResult] = useState(true);
+  const [isExampleResult, setIsExampleResult] = useState(
+    !initialResolved.isUserData
+  );
+  const [isStale, setIsStale] = useState(false);
   const resultSectionRef = useRef<HTMLDivElement | null>(null);
 
   const hasTraining = input.workoutsPerWeek > 0;
@@ -475,6 +513,8 @@ export function CalculatorForm() {
       ...currentInput,
       [key]: value,
     }));
+
+    setIsStale(true);
 
     if (errorMessage) {
       setErrorMessage(null);
@@ -490,6 +530,8 @@ export function CalculatorForm() {
       averageWorkoutDurationMinutes:
         safeValue === 0 ? 0 : currentInput.averageWorkoutDurationMinutes || 60,
     }));
+
+    setIsStale(true);
 
     if (errorMessage) {
       setErrorMessage(null);
@@ -513,6 +555,17 @@ export function CalculatorForm() {
       setResult(calculatedResult);
       setErrorMessage(null);
       setIsExampleResult(false);
+      setIsStale(false);
+
+      try {
+        window.localStorage.setItem(
+          lastInputStorageKey,
+          JSON.stringify(input)
+        );
+      } catch {
+        // Ignore storage errors (e.g. private mode); the result still shows.
+      }
+
       scrollToResults();
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
@@ -524,14 +577,23 @@ export function CalculatorForm() {
     setResult(calculateCalories(initialInput));
     setErrorMessage(null);
     setIsExampleResult(true);
+    setIsStale(false);
+
+    try {
+      window.localStorage.removeItem(lastInputStorageKey);
+    } catch {
+      // Ignore storage errors.
+    }
+
     scrollToResults();
   }
 
   return (
     <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
       <form
+        id="calculator-form"
         onSubmit={handleSubmit}
-        className="rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-7"
+        className="scroll-mt-6 rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:scroll-mt-10 md:p-7"
       >
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
@@ -552,6 +614,26 @@ export function CalculatorForm() {
           </div>
         </div>
 
+        <nav
+          aria-label="Sectiuni formular"
+          className="sticky top-2 z-10 mt-4 -mx-1 flex gap-2 overflow-x-auto rounded-2xl border border-neutral-200 bg-white/90 px-2 py-2 backdrop-blur"
+        >
+          {[
+            { id: "sec-personal", label: "01 Date" },
+            { id: "sec-goal", label: "02 Obiectiv" },
+            { id: "sec-activity", label: "03 Activitate" },
+            { id: "sec-training", label: "04 Antrenamente" },
+          ].map((section) => (
+            <a
+              key={section.id}
+              href={`#${section.id}`}
+              className="shrink-0 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-600 transition hover:border-emerald-700/25 hover:bg-emerald-50/60 hover:text-emerald-800"
+            >
+              {section.label}
+            </a>
+          ))}
+        </nav>
+
         {errorMessage && (
           <div
             role="alert"
@@ -569,6 +651,7 @@ export function CalculatorForm() {
 
         <div className="mt-6 grid gap-6">
           <SectionHeader
+            id="sec-personal"
             number="01"
             title="Date personale"
             description="Aceste informatii sunt folosite pentru estimarea BMR prin formula Mifflin-St Jeor."
@@ -617,6 +700,7 @@ export function CalculatorForm() {
           </div>
 
           <SectionHeader
+            id="sec-goal"
             number="02"
             title="Obiectiv"
             description="Alege directia principala. Calculatorul va seta deficitul, mentinerea sau surplusul intr-un mod conservator."
@@ -629,11 +713,24 @@ export function CalculatorForm() {
           />
 
           <SectionHeader
+            id="sec-activity"
             number="03"
             title="Activitate zilnica"
             description="Pasii, jobul si miscarea generala sunt estimate separat pentru un TDEE mai realist."
             icon={<MinimalIcon name="steps" className="h-5 w-5" />}
           />
+
+          <div className="rounded-3xl border border-sky-100 bg-sky-50/70 p-4">
+            <p className="text-sm font-semibold text-sky-950">
+              De ce 3 intrebari despre activitate?
+            </p>
+            <p className="mt-2 text-sm leading-6 text-sky-950/75">
+              Nivelul de miscare, pasii si tipul de job descriu aceeasi zi din
+              unghiuri diferite. Le intrebam separat ca estimarea sa fie mai
+              exacta, iar calculatorul ajusteaza automat suprapunerea dintre
+              ele. Nu aduna manual aceeasi activitate de doua ori.
+            </p>
+          </div>
 
           <SelectField<DailyActivityLevel>
             label="Miscare zilnica generala"
@@ -669,6 +766,7 @@ export function CalculatorForm() {
           />
 
           <SectionHeader
+            id="sec-training"
             number="04"
             title="Antrenamente"
             description="Antrenamentele sunt calculate separat si apoi transformate in medie zilnica saptamanala."
@@ -765,10 +863,25 @@ export function CalculatorForm() {
             )}
           </div>
 
+          {isStale && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900"
+            >
+              Ai modificat datele. Apasa „Calculeaza rezultatul” ca rezultatele
+              sa reflecte valorile noi.
+            </div>
+          )}
+
           <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
             <button
               type="submit"
-              className="rounded-2xl bg-emerald-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-emerald-600"
+              className={
+                isStale
+                  ? "rounded-2xl bg-emerald-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-900/20 ring-2 ring-emerald-600/30 transition hover:bg-emerald-600"
+                  : "rounded-2xl bg-emerald-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-emerald-600"
+              }
             >
               Calculeaza rezultatul
             </button>
@@ -785,7 +898,11 @@ export function CalculatorForm() {
       </form>
 
       <div ref={resultSectionRef} className="scroll-mt-6 md:scroll-mt-10">
-        <CalculatorResults result={result} isExampleResult={isExampleResult} />
+        <CalculatorResults
+          result={result}
+          isExampleResult={isExampleResult}
+          isStale={isStale}
+        />
       </div>
     </div>
   );

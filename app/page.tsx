@@ -175,6 +175,47 @@ export default function Home() {
               </p>
             </div>
           </div>
+
+          <details className="group mt-6 rounded-3xl border border-neutral-200 bg-white p-5">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-semibold text-neutral-950">
+              Cum calculam estimarile
+              <span className="text-sm font-medium text-emerald-700 transition group-open:rotate-180">
+                <MinimalIcon name="trend" className="h-5 w-5" />
+              </span>
+            </summary>
+
+            <div className="mt-4 grid gap-3 text-sm leading-6 text-neutral-600">
+              <p>
+                <span className="font-semibold text-neutral-950">BMR</span> este
+                estimat cu formula Mifflin-St Jeor, pe baza sexului, varstei,
+                inaltimii si greutatii.
+              </p>
+
+              <p>
+                <span className="font-semibold text-neutral-950">TDEE</span> nu
+                foloseste un singur multiplicator de activitate. Insumeaza BMR,
+                activitatea zilnica (pasi, job si miscare generala) si
+                antrenamentele, aduse la o medie zilnica. Pasii, jobul si
+                nivelul de activitate sunt ajustate intre ele ca sa nu numere de
+                doua ori aceeasi miscare.
+              </p>
+
+              <p>
+                <span className="font-semibold text-neutral-950">
+                  Target, macro si hidratare
+                </span>{" "}
+                pornesc de la TDEE: obiectivul seteaza un deficit sau surplus
+                moderat, proteinele si grasimile sunt estimate pe kilogram, iar
+                carbohidratii completeaza energia ramasa.
+              </p>
+
+              <p className="text-neutral-500">
+                Constantele folosite sunt repere conservatoare, calibrate ca sa
+                reduca riscul de supraestimare. Sunt estimari, nu valori
+                validate clinic, si se ajusteaza dupa progresul real.
+              </p>
+            </div>
+          </details>
         </div>
 
         <footer className="rounded-[2rem] border border-neutral-200 bg-white/85 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.06)] backdrop-blur md:p-7">

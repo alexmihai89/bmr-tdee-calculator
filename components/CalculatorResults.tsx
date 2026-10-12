@@ -15,6 +15,7 @@ import {
   formatSignedCaloriesPerDay,
   formatSignedPercent,
 } from "@/lib/formatters";
+import { serializeInputToQuery } from "@/lib/inputSerialization";
 import type { CalorieCalculatorResult } from "@/lib/types";
 
 function ResultCard({
@@ -22,12 +23,14 @@ function ResultCard({
   value,
   suffix = "kcal / zi",
   highlight = false,
+  compact = false,
   icon,
 }: {
   label: string;
   value: string;
   suffix?: string;
   highlight?: boolean;
+  compact?: boolean;
   icon?: React.ReactNode;
 }) {
   return (
@@ -60,7 +63,13 @@ function ResultCard({
         </div>
       )}
 
-      <p className="mt-3 text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl">
+      <p
+        className={
+          compact
+            ? "mt-3 text-2xl font-semibold tracking-tight text-neutral-950 sm:text-3xl"
+            : "mt-3 text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl"
+        }
+      >
         {value}
       </p>
 
@@ -310,7 +319,16 @@ function buildFullResultText(result: CalorieCalculatorResult): string {
 }
 
 function ShareActions({ result }: { result: CalorieCalculatorResult }) {
-  const [copiedType, setCopiedType] = useState<"compact" | "full" | null>(null);
+  const [copiedType, setCopiedType] = useState<
+    "compact" | "full" | "link" | null
+  >(null);
+
+  function flagCopied(type: "compact" | "full" | "link") {
+    setCopiedType(type);
+    window.setTimeout(() => {
+      setCopiedType(null);
+    }, 1800);
+  }
 
   async function copyText(type: "compact" | "full") {
     const text =
@@ -320,11 +338,19 @@ function ShareActions({ result }: { result: CalorieCalculatorResult }) {
 
     try {
       await navigator.clipboard.writeText(text);
-      setCopiedType(type);
+      flagCopied(type);
+    } catch {
+      setCopiedType(null);
+    }
+  }
 
-      window.setTimeout(() => {
-        setCopiedType(null);
-      }, 1800);
+  async function copyLink() {
+    const query = serializeInputToQuery(result.input);
+    const url = `${window.location.origin}${window.location.pathname}?${query}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      flagCopied("link");
     } catch {
       setCopiedType(null);
     }
@@ -346,7 +372,8 @@ function ShareActions({ result }: { result: CalorieCalculatorResult }) {
             Share rezultat
           </p>
           <p className="mt-1 text-xs leading-5 text-neutral-500">
-            Copiaza un rezumat scurt, raportul complet sau printeaza pagina.
+            Copiaza un rezumat, raportul complet, un link cu datele tale sau
+            printeaza pagina.
           </p>
         </div>
       </div>
@@ -354,8 +381,16 @@ function ShareActions({ result }: { result: CalorieCalculatorResult }) {
       <div className="mt-4 grid gap-2">
         <button
           type="button"
-          onClick={() => copyText("compact")}
+          onClick={copyLink}
           className="rounded-2xl border border-emerald-700/20 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 transition hover:border-emerald-700/35 hover:bg-emerald-100"
+        >
+          {copiedType === "link" ? "Link copiat" : "Copiaza link rezultat"}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => copyText("compact")}
+          className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-emerald-700/25 hover:bg-emerald-50/50"
         >
           {copiedType === "compact" ? "Rezumat copiat" : "Copiaza rezumat"}
         </button>
@@ -398,6 +433,13 @@ function SummaryPanel({ result }: { result: CalorieCalculatorResult }) {
           <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight text-neutral-950 md:text-5xl">
             {formatCaloriesPerDay(result.targetCalories)}
           </h2>
+
+          <p className="mt-3 max-w-2xl text-base font-medium leading-7 text-neutral-800">
+            Tinteste aproximativ {formatCaloriesPerDay(result.targetCalories)}{" "}
+            si {formatGrams(result.macros.proteinGrams)} de proteine pe zi.
+            Grasimile si carbohidratii completeaza restul si se ajusteaza dupa
+            preferinte.
+          </p>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">
             Foloseste aceasta valoare ca punct de pornire. Rezultatul real se
@@ -622,29 +664,52 @@ function ActivityBreakdownBar({ result }: { result: CalorieCalculatorResult }) {
 export function CalculatorResults({
   result,
   isExampleResult = false,
+  isStale = false,
 }: {
   result: CalorieCalculatorResult;
   isExampleResult?: boolean;
+  isStale?: boolean;
 }) {
   return (
     <section className="flex flex-col gap-6">
       <div className="sticky top-2 z-20 flex items-center justify-between gap-3 rounded-2xl border border-emerald-700/15 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
-        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700">
-          Target
-        </span>
-        <span className="text-base font-semibold text-neutral-950">
-          {formatCaloriesPerDay(result.targetCalories)}
-        </span>
+        <div className="flex flex-col">
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700">
+            Target
+          </span>
+          <span className="text-base font-semibold text-neutral-950">
+            {formatCaloriesPerDay(result.targetCalories)}
+          </span>
+        </div>
+        <a
+          href="#calculator-form"
+          className="shrink-0 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-600 transition hover:border-emerald-700/25 hover:bg-emerald-50/60 hover:text-emerald-800"
+        >
+          ↑ Modifica datele
+        </a>
       </div>
 
-      {isExampleResult && (
-        <div className="rounded-2xl border border-neutral-200 bg-neutral-50/80 px-4 py-3">
-          <p className="text-xs leading-5 text-neutral-500">
-            Valorile de mai jos sunt un exemplu, pe baza datelor implicite.
-            Completeaza formularul si apasa „Calculeaza rezultatul” pentru
-            estimarea ta.
+      {isStale ? (
+        <div
+          role="status"
+          aria-live="polite"
+          className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3"
+        >
+          <p className="text-xs leading-5 text-amber-900">
+            Datele s-au schimbat. Rezultatele de mai jos nu reflecta ultimele
+            modificari pana nu apesi „Calculeaza rezultatul”.
           </p>
         </div>
+      ) : (
+        isExampleResult && (
+          <div className="rounded-2xl border border-neutral-200 bg-neutral-50/80 px-4 py-3">
+            <p className="text-xs leading-5 text-neutral-500">
+              Valorile de mai jos sunt un exemplu, pe baza datelor implicite.
+              Completeaza formularul si apasa „Calculeaza rezultatul” pentru
+              estimarea ta.
+            </p>
+          </div>
+        )
       )}
 
       <SummaryPanel result={result} />
@@ -664,11 +729,21 @@ export function CalculatorResults({
 
         <ResultCard
           label="TDEE estimat"
-          value={formatNumber(result.estimatedTdee)}
+          value={`${formatNumber(
+            Math.round(result.estimatedTdee * 0.95)
+          )}–${formatNumber(Math.round(result.estimatedTdee * 1.05))}`}
+          suffix="kcal / zi · interval estimativ"
           highlight
+          compact
           icon={<MinimalIcon name="target" className="h-5 w-5" />}
         />
       </div>
+
+      <p className="-mt-2 text-xs leading-5 text-neutral-500">
+        TDEE-ul este afisat ca interval (aproximativ ±5%) fiindca este o
+        estimare, nu o valoare exacta. Valoarea centrala este de aproximativ{" "}
+        {formatCaloriesPerDay(result.estimatedTdee)}.
+      </p>
 
       <ActivityBreakdownBar result={result} />
 
