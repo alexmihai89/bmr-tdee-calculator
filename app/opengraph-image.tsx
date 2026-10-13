@@ -4,7 +4,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "AM Calorie Calculator by Alexandru Mihai";
+export const alt = "BMR TDEE Calculator by Alexandru Mihai";
 export const size = {
   width: 1200,
   height: 630,
@@ -44,13 +44,13 @@ export default function OpenGraphImage() {
           >
             <div
               style={{
-                color: "#34d399",
+                color: "#60a5fa",
                 fontSize: "28px",
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
               }}
             >
-              AM Calorie Calculator
+              BMR TDEE Calculator
             </div>
 
             <div
@@ -71,12 +71,12 @@ export default function OpenGraphImage() {
               width: "120px",
               height: "120px",
               borderRadius: "32px",
-              border: "1px solid rgba(52, 211, 153, 0.35)",
-              background: "rgba(16, 185, 129, 0.12)",
+              border: "1px solid rgba(96, 165, 250, 0.35)",
+              background: "rgba(37, 99, 235, 0.14)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#34d399",
+              color: "#60a5fa",
               fontSize: "42px",
               fontWeight: 700,
             }}

@@ -37,14 +37,14 @@ function ResultCard({
     <div
       className={
         highlight
-          ? "relative overflow-hidden rounded-3xl border border-emerald-700/20 bg-emerald-50 p-5 pr-16 shadow-sm"
+          ? "relative overflow-hidden rounded-3xl border border-blue-700/20 bg-blue-50 p-5 pr-16 shadow-sm"
           : "relative overflow-hidden rounded-3xl border border-neutral-200 bg-white p-5 pr-16 shadow-sm"
       }
     >
       <p
         className={
           highlight
-            ? "text-sm font-medium leading-5 text-emerald-800"
+            ? "text-sm font-medium leading-5 text-blue-800"
             : "text-sm font-medium leading-5 text-neutral-500"
         }
       >
@@ -55,7 +55,7 @@ function ResultCard({
         <div
           className={
             highlight
-              ? "absolute right-4 top-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700"
+              ? "absolute right-4 top-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-blue-700"
               : "absolute right-4 top-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-neutral-50 text-neutral-500"
           }
         >
@@ -76,7 +76,7 @@ function ResultCard({
       <p
         className={
           highlight
-            ? "mt-1 text-sm leading-6 text-emerald-800/70"
+            ? "mt-1 text-sm leading-6 text-blue-800/70"
             : "mt-1 text-sm leading-6 text-neutral-400"
         }
       >
@@ -101,7 +101,7 @@ function MacroCard({
     <div className="relative overflow-hidden rounded-3xl border border-neutral-200 bg-white p-5 pr-16 shadow-sm">
       <p className="text-sm font-medium leading-5 text-neutral-500">{label}</p>
 
-      <div className="absolute right-4 top-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+      <div className="absolute right-4 top-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
         {icon}
       </div>
 
@@ -148,7 +148,7 @@ function MacroSplitBar({ result }: { result: CalorieCalculatorResult }) {
         className="mt-3 flex h-4 overflow-hidden rounded-full bg-neutral-100"
       >
         <div
-          className="bg-emerald-700"
+          className="bg-blue-700"
           style={{ width: `${proteinShare}%` }}
           title={`Proteine ${proteinShare}%`}
         />
@@ -158,7 +158,7 @@ function MacroSplitBar({ result }: { result: CalorieCalculatorResult }) {
           title={`Grasimi ${fatShare}%`}
         />
         <div
-          className="bg-sky-400"
+          className="bg-blue-400"
           style={{ width: `${carbShare}%` }}
           title={`Carbohidrati ${carbShare}%`}
         />
@@ -166,7 +166,7 @@ function MacroSplitBar({ result }: { result: CalorieCalculatorResult }) {
 
       <div className="mt-3 grid gap-2 text-xs text-neutral-500 sm:grid-cols-3">
         <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-700" />
+          <span className="h-2.5 w-2.5 rounded-full bg-blue-700" />
           Proteine: {proteinShare}%
         </div>
 
@@ -176,7 +176,7 @@ function MacroSplitBar({ result }: { result: CalorieCalculatorResult }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-sky-400" />
+          <span className="h-2.5 w-2.5 rounded-full bg-blue-400" />
           Carbohidrati: {carbShare}%
         </div>
       </div>
@@ -234,7 +234,7 @@ function buildCompactResultText(result: CalorieCalculatorResult): string {
         )} / luna`;
 
   return [
-    "AM Calorie Calculator",
+    "BMR TDEE Calculator",
     "",
     `Obiectiv: ${getGoalLabel(result.input.goal)}`,
     `Target caloric: ${formatCaloriesPerDay(result.targetCalories)}`,
@@ -278,7 +278,7 @@ function buildFullResultText(result: CalorieCalculatorResult): string {
     : "Macro-uri: indisponibile";
 
   return [
-    "AM Calorie Calculator",
+    "BMR TDEE Calculator",
     "Raport estimativ BMR / TDEE / calorii tinta",
     "",
     `Obiectiv: ${getGoalLabel(result.input.goal)}`,
@@ -363,7 +363,7 @@ function ShareActions({ result }: { result: CalorieCalculatorResult }) {
   return (
     <div className="rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
           <MinimalIcon name="info" className="h-5 w-5" />
         </div>
 
@@ -382,7 +382,7 @@ function ShareActions({ result }: { result: CalorieCalculatorResult }) {
         <button
           type="button"
           onClick={copyLink}
-          className="rounded-2xl border border-emerald-700/20 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 transition hover:border-emerald-700/35 hover:bg-emerald-100"
+          className="rounded-2xl border border-blue-700/20 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-800 transition hover:border-blue-700/35 hover:bg-blue-100"
         >
           {copiedType === "link" ? "Link copiat" : "Copiaza link rezultat"}
         </button>
@@ -390,7 +390,7 @@ function ShareActions({ result }: { result: CalorieCalculatorResult }) {
         <button
           type="button"
           onClick={() => copyText("compact")}
-          className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-emerald-700/25 hover:bg-emerald-50/50"
+          className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-blue-700/25 hover:bg-blue-50/50"
         >
           {copiedType === "compact" ? "Rezumat copiat" : "Copiaza rezumat"}
         </button>
@@ -398,7 +398,7 @@ function ShareActions({ result }: { result: CalorieCalculatorResult }) {
         <button
           type="button"
           onClick={() => copyText("full")}
-          className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-emerald-700/25 hover:bg-emerald-50/50"
+          className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-blue-700/25 hover:bg-blue-50/50"
         >
           {copiedType === "full" ? "Raport copiat" : "Copiaza raport complet"}
         </button>
@@ -417,15 +417,15 @@ function ShareActions({ result }: { result: CalorieCalculatorResult }) {
 
 function SummaryPanel({ result }: { result: CalorieCalculatorResult }) {
   return (
-    <div className="rounded-[2rem] border border-emerald-700/15 bg-gradient-to-br from-emerald-50 via-white to-white p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] md:p-7">
+    <div className="rounded-[2rem] border border-blue-700/15 bg-gradient-to-br from-blue-50 via-white to-white p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] md:p-7">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-blue-700 shadow-sm">
               <MinimalIcon name="target" className="h-5 w-5" />
             </div>
 
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
               Recomandare principala
             </p>
           </div>
@@ -448,7 +448,7 @@ function SummaryPanel({ result }: { result: CalorieCalculatorResult }) {
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2">
-            <div className="rounded-full border border-emerald-700/15 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-800">
+            <div className="rounded-full border border-blue-700/15 bg-white px-3 py-1.5 text-xs font-semibold text-blue-800">
               Obiectiv: {getGoalLabel(result.input.goal)}
             </div>
 
@@ -469,15 +469,15 @@ function SummaryPanel({ result }: { result: CalorieCalculatorResult }) {
               </div>
             )}
 
-            <div className="rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-800">
+            <div className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-800">
               Hidratare: {formatHydrationRange(result)} / zi
             </div>
           </div>
         </div>
 
         <div className="flex flex-col gap-3">
-          <div className="rounded-3xl border border-emerald-700/15 bg-white p-4 shadow-sm">
-            <p className="text-sm font-medium text-emerald-800">
+          <div className="rounded-3xl border border-blue-700/15 bg-white p-4 shadow-sm">
+            <p className="text-sm font-medium text-blue-800">
               Interval realist
             </p>
             <p className="mt-2 text-xl font-semibold text-neutral-950">
@@ -491,22 +491,22 @@ function SummaryPanel({ result }: { result: CalorieCalculatorResult }) {
 
       {result.macros && (
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-3xl border border-emerald-700/15 bg-white p-4 shadow-sm">
-            <p className="text-sm font-medium text-emerald-800">Proteine</p>
+          <div className="rounded-3xl border border-blue-700/15 bg-white p-4 shadow-sm">
+            <p className="text-sm font-medium text-blue-800">Proteine</p>
             <p className="mt-1 text-2xl font-semibold text-neutral-950">
               {formatGrams(result.macros.proteinGrams)}
             </p>
           </div>
 
-          <div className="rounded-3xl border border-emerald-700/15 bg-white p-4 shadow-sm">
-            <p className="text-sm font-medium text-emerald-800">Grasimi</p>
+          <div className="rounded-3xl border border-blue-700/15 bg-white p-4 shadow-sm">
+            <p className="text-sm font-medium text-blue-800">Grasimi</p>
             <p className="mt-1 text-2xl font-semibold text-neutral-950">
               {formatGrams(result.macros.fatGrams)}
             </p>
           </div>
 
-          <div className="rounded-3xl border border-emerald-700/15 bg-white p-4 shadow-sm">
-            <p className="text-sm font-medium text-emerald-800">
+          <div className="rounded-3xl border border-blue-700/15 bg-white p-4 shadow-sm">
+            <p className="text-sm font-medium text-blue-800">
               Carbohidrati
             </p>
             <p className="mt-1 text-2xl font-semibold text-neutral-950">
@@ -525,11 +525,11 @@ function HydrationPanel({ result }: { result: CalorieCalculatorResult }) {
       <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-50 text-sky-700">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
               <MinimalIcon name="hydration" className="h-5 w-5" />
             </div>
 
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
               Hidratare
             </p>
           </div>
@@ -543,14 +543,14 @@ function HydrationPanel({ result }: { result: CalorieCalculatorResult }) {
           </p>
         </div>
 
-        <div className="rounded-3xl border border-emerald-700/15 bg-emerald-50 p-5 md:min-w-64">
-          <p className="text-sm font-medium text-emerald-800">
+        <div className="rounded-3xl border border-blue-700/15 bg-blue-50 p-5 md:min-w-64">
+          <p className="text-sm font-medium text-blue-800">
             Apa recomandata
           </p>
           <p className="mt-2 text-3xl font-semibold tracking-tight text-neutral-950">
             {formatHydrationRange(result)}
           </p>
-          <p className="mt-1 text-sm text-emerald-800/70">pe zi</p>
+          <p className="mt-1 text-sm text-blue-800/70">pe zi</p>
         </div>
       </div>
 
@@ -600,7 +600,7 @@ function ActivityBreakdownBar({ result }: { result: CalorieCalculatorResult }) {
   return (
     <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
           <MinimalIcon name="activity" className="h-5 w-5" />
         </div>
 
@@ -621,18 +621,18 @@ function ActivityBreakdownBar({ result }: { result: CalorieCalculatorResult }) {
         className="mt-5 flex h-4 overflow-hidden rounded-full bg-neutral-100"
       >
         <div
-          className="bg-emerald-700"
+          className="bg-blue-700"
           style={{ width: `${bmrPercent}%` }}
           title={`BMR ${bmrShare}%`}
         />
         <div
-          className="bg-emerald-400"
+          className="bg-blue-400"
           style={{ width: `${activityPercent}%` }}
           title={`Activitate ${activityShare}%`}
         />
         {trainingPercent > 0 && (
           <div
-            className="bg-sky-400"
+            className="bg-amber-400"
             style={{ width: `${trainingPercent}%` }}
             title={`Antrenamente ${trainingShare}%`}
           />
@@ -641,18 +641,18 @@ function ActivityBreakdownBar({ result }: { result: CalorieCalculatorResult }) {
 
       <div className="mt-4 grid gap-2 text-xs text-neutral-500 sm:grid-cols-3">
         <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-700" />
+          <span className="h-2.5 w-2.5 rounded-full bg-blue-700" />
           BMR: {formatCalories(result.bmr)} · {bmrShare}%
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+          <span className="h-2.5 w-2.5 rounded-full bg-blue-400" />
           Activitate: {formatCalories(result.dailyActivityCalories)} ·{" "}
           {activityShare}%
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-sky-400" />
+          <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
           Antrenamente: {formatCalories(result.trainingCalories)} ·{" "}
           {trainingShare}%
         </div>
@@ -672,9 +672,9 @@ export function CalculatorResults({
 }) {
   return (
     <section className="flex flex-col gap-6">
-      <div className="sticky top-2 z-20 flex items-center justify-between gap-3 rounded-2xl border border-emerald-700/15 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
+      <div className="sticky top-2 z-20 flex items-center justify-between gap-3 rounded-2xl border border-blue-700/15 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
         <div className="flex flex-col">
-          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700">
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-blue-700">
             Target
           </span>
           <span className="text-base font-semibold text-neutral-950">
@@ -683,7 +683,7 @@ export function CalculatorResults({
         </div>
         <a
           href="#calculator-form"
-          className="shrink-0 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-600 transition hover:border-emerald-700/25 hover:bg-emerald-50/60 hover:text-emerald-800"
+          className="shrink-0 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-600 transition hover:border-blue-700/25 hover:bg-blue-50/60 hover:text-blue-800"
         >
           ↑ Modifica datele
         </a>
@@ -750,11 +750,11 @@ export function CalculatorResults({
       <div className="rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.06)] backdrop-blur md:p-6">
         <div>
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
               <MinimalIcon name="activity" className="h-5 w-5" />
             </div>
 
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
               Breakdown activitate
             </p>
           </div>
@@ -813,7 +813,7 @@ export function CalculatorResults({
 
       <div className="rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.06)] backdrop-blur md:p-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
             <MinimalIcon name="trend" className="h-5 w-5" />
           </div>
 
@@ -838,11 +838,11 @@ export function CalculatorResults({
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                   <MinimalIcon name="macros" className="h-5 w-5" />
                 </div>
 
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
                   Macro-uri
                 </p>
               </div>

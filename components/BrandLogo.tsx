@@ -19,7 +19,7 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Deschide site-ul Sala Brick Fitness Brothers"
-          className="relative h-16 w-48 overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-[0_16px_50px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-emerald-700/30 hover:shadow-[0_20px_70px_rgba(22,101,52,0.14)] sm:h-20 sm:w-56"
+          className="relative h-16 w-48 overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-[0_16px_50px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-blue-700/30 hover:shadow-[0_20px_70px_rgba(22,101,52,0.14)] sm:h-20 sm:w-56"
         >
           <Image
             src="/sala-brick-logo.png"
@@ -43,7 +43,7 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
             href={gymWebsiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 inline-flex text-xs font-semibold text-emerald-700 transition hover:text-emerald-600"
+            className="mt-2 inline-flex text-xs font-semibold text-blue-700 transition hover:text-blue-600"
           >
             salabrick.ro
           </a>
@@ -66,8 +66,8 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700 sm:text-sm">
-          AM Calorie Calculator
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-700 sm:text-sm">
+          BMR TDEE Calculator
         </p>
 
         <p className="mt-2 text-2xl font-semibold tracking-tight text-neutral-950 sm:text-3xl">
@@ -78,7 +78,7 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
           href={instagramUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-3 inline-flex rounded-full border border-emerald-700/15 bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-800 transition hover:border-emerald-700/30 hover:bg-emerald-100"
+          className="mt-3 inline-flex rounded-full border border-blue-700/15 bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-800 transition hover:border-blue-700/30 hover:bg-blue-100"
         >
           Instagram: @alecsmihai
         </a>
@@ -86,6 +86,12 @@ export function BrandLogo({ variant = "hero" }: BrandLogoProps) {
         <p className="mt-3 max-w-xl text-sm leading-6 text-neutral-600">
           Calculator BMR / TDEE construit pentru estimari realiste, clare si
           usor de folosit.
+        </p>
+
+        <p className="mt-2 max-w-xl text-sm leading-6 text-neutral-500">
+          Pe intelesul tuturor: estimeaza rata metabolica bazala (caloriile
+          arse in repaus) si necesarul energetic zilnic total (cat consumi
+          intr-o zi).
         </p>
       </div>
     </div>

@@ -55,7 +55,7 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
     <div className="rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-7">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
             Inainte sa folosesti calculatorul
           </p>
 
@@ -70,14 +70,14 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
           </p>
         </div>
 
-        <div className="w-fit rounded-full border border-emerald-700/15 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-800">
+        <div className="w-fit rounded-full border border-blue-700/15 bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-800">
           Estimari educationale
         </div>
       </div>
 
       <div className="mt-7 grid gap-4 lg:grid-cols-3">
         <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
             <MinimalIcon name="calculator" className="h-5 w-5" />
           </div>
 
@@ -94,7 +94,7 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-50 text-sky-700">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
             <MinimalIcon name="activity" className="h-5 w-5" />
           </div>
 
@@ -133,7 +133,7 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
             type="checkbox"
             checked={isChecked}
             onChange={(event) => setIsChecked(event.target.checked)}
-            className="mt-1 h-5 w-5 accent-emerald-600"
+            className="mt-1 h-5 w-5 accent-blue-600"
           />
 
           <span className="text-sm leading-6 text-neutral-700">
@@ -149,7 +149,7 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
           onClick={handleContinue}
           className={
             isChecked
-              ? "rounded-2xl bg-emerald-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-emerald-600"
+              ? "rounded-2xl bg-blue-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-blue-900/10 transition hover:bg-blue-600"
               : "cursor-not-allowed rounded-2xl bg-neutral-200 px-5 py-4 text-base font-semibold text-neutral-400"
           }
         >

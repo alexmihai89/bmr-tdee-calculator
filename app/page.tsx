@@ -8,13 +8,13 @@ import { MinimalIcon } from "@/components/MinimalIcon";
 export default function Home() {
   return (
     <main className="bio-light-background min-h-screen px-4 py-4 text-neutral-950 md:py-10">
-      <section className="relative z-10 mx-auto flex max-w-7xl flex-col gap-6 md:gap-8">
-        <header className="rounded-[2rem] border border-emerald-900/10 bg-white/85 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-7">
+      <section className="relative z-10 mx-auto flex max-w-3xl flex-col gap-6 md:gap-8">
+        <header className="rounded-[2rem] border border-blue-900/10 bg-white/85 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-7">
           <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
             <BrandLogo />
 
             <div className="flex flex-wrap gap-2 md:gap-3">
-              <span className="rounded-full border border-emerald-700/15 bg-emerald-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-800 md:px-4">
+              <span className="rounded-full border border-blue-700/15 bg-blue-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-blue-800 md:px-4">
                 BMR / TDEE / Macro
               </span>
 
@@ -24,9 +24,9 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-7 grid gap-6 lg:mt-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+          <div className="mt-7 grid gap-6 lg:mt-10">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-700">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-blue-700">
                 Calculator calorii, activitate si hidratare
               </p>
 
@@ -43,11 +43,20 @@ export default function Home() {
                 hidratare pe baza stilului tau de viata, pasilor,
                 antrenamentelor si obiectivului.
               </p>
+
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-500 md:text-base md:leading-7">
+                Pe intelesul tuturor:{" "}
+                <span className="font-semibold text-neutral-700">BMR</span> este
+                rata metabolica bazala, adica energia arsa in repaus, iar{" "}
+                <span className="font-semibold text-neutral-700">TDEE</span> este
+                necesarul energetic zilnic total, adica tot ce consumi intr-o zi
+                obisnuita.
+              </p>
             </div>
 
-            <div className="rounded-3xl border border-emerald-900/10 bg-emerald-50/75 p-5 shadow-sm">
+            <div className="rounded-3xl border border-blue-900/10 bg-blue-50/75 p-5 shadow-sm">
               <div className="flex gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm md:h-12 md:w-12">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-blue-700 shadow-sm md:h-12 md:w-12">
                   <MinimalIcon name="check" className="h-5 w-5" />
                 </div>
 
@@ -68,7 +77,7 @@ export default function Home() {
           <div className="mt-6 grid gap-3 md:mt-8 md:grid-cols-3">
             <div className="rounded-3xl border border-neutral-200 bg-white/85 p-5 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                   <MinimalIcon name="calculator" className="h-5 w-5" />
                 </div>
 
@@ -85,7 +94,7 @@ export default function Home() {
 
             <div className="rounded-3xl border border-neutral-200 bg-white/85 p-5 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-50 text-sky-700">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                   <MinimalIcon name="target" className="h-5 w-5" />
                 </div>
 
@@ -102,7 +111,7 @@ export default function Home() {
 
             <div className="rounded-3xl border border-neutral-200 bg-white/85 p-5 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                   <MinimalIcon name="trend" className="h-5 w-5" />
                 </div>
 
@@ -123,13 +132,13 @@ export default function Home() {
         </DisclaimerGate>
 
         <div className="rounded-[2rem] border border-neutral-200 bg-white/85 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.06)] backdrop-blur md:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
             Cum interpretezi rezultatele
           </p>
 
           <div className="mt-6 grid gap-5 md:grid-cols-3">
             <div className="rounded-3xl border border-neutral-200 bg-white p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                 <MinimalIcon name="info" className="h-5 w-5" />
               </div>
 
@@ -145,7 +154,7 @@ export default function Home() {
             </div>
 
             <div className="rounded-3xl border border-neutral-200 bg-white p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-50 text-sky-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                 <MinimalIcon name="trend" className="h-5 w-5" />
               </div>
 
@@ -179,7 +188,7 @@ export default function Home() {
           <details className="group mt-6 rounded-3xl border border-neutral-200 bg-white p-5">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-semibold text-neutral-950">
               Cum calculam estimarile
-              <span className="text-sm font-medium text-emerald-700 transition group-open:rotate-180">
+              <span className="text-sm font-medium text-blue-700 transition group-open:rotate-180">
                 <MinimalIcon name="trend" className="h-5 w-5" />
               </span>
             </summary>
@@ -221,8 +230,8 @@ export default function Home() {
         <footer className="rounded-[2rem] border border-neutral-200 bg-white/85 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.06)] backdrop-blur md:p-7">
           <div className="grid gap-6 lg:grid-cols-[1fr_1fr_1fr] lg:items-start">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
-                AM Calorie Calculator
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
+                BMR TDEE Calculator
               </p>
 
               <h2 className="mt-3 text-2xl font-semibold tracking-tight text-neutral-950">
@@ -245,9 +254,9 @@ export default function Home() {
                   href="https://www.instagram.com/alecsmihai?igsh=YjQ2MHB1dXpsc3hq&utm_source=qr"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-emerald-700/25 hover:bg-emerald-50/50"
+                  className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-blue-700/25 hover:bg-blue-50/50"
                 >
-                  <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                     <MinimalIcon name="info" className="h-4 w-4" />
                   </span>
                   Instagram: @alecsmihai
@@ -257,9 +266,9 @@ export default function Home() {
                   href="https://salabrick.ro/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-emerald-700/25 hover:bg-emerald-50/50"
+                  className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:border-blue-700/25 hover:bg-blue-50/50"
                 >
-                  <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
                     <MinimalIcon name="activity" className="h-4 w-4" />
                   </span>
                   salabrick.ro
@@ -286,7 +295,7 @@ export default function Home() {
           </div>
 
           <div className="mt-6 flex flex-col gap-3 border-t border-neutral-200 pt-5 text-xs leading-5 text-neutral-400 md:flex-row md:items-center md:justify-between">
-            <p>© AM Calorie Calculator by Alexandru Mihai.</p>
+            <p>© BMR TDEE Calculator by Alexandru Mihai.</p>
             <p>Un punct de pornire clar pentru nutritie, activitate si progres.</p>
           </div>
         </footer>
