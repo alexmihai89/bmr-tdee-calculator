@@ -275,7 +275,7 @@ function NumberField({
           aria-describedby={describedBy}
           className="w-full bg-transparent py-3 text-base text-neutral-950 outline-none"
         />
-        {suffix && <span className="text-sm text-neutral-400">{suffix}</span>}
+        {suffix && <span className="text-sm text-neutral-500">{suffix}</span>}
       </div>
 
       {helperText && (

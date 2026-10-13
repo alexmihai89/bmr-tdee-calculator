@@ -77,7 +77,7 @@ function ResultCard({
         className={
           highlight
             ? "mt-1 text-sm leading-6 text-blue-800/70"
-            : "mt-1 text-sm leading-6 text-neutral-400"
+            : "mt-1 text-sm leading-6 text-neutral-500"
         }
       >
         {suffix}
@@ -130,9 +130,8 @@ function MacroSplitBar({ result }: { result: CalorieCalculatorResult }) {
     (macros.proteinCalories / totalMacroCalories) * 100
   );
   const fatShare = Math.round((macros.fatCalories / totalMacroCalories) * 100);
-  const carbShare = Math.round(
-    (macros.carbohydrateCalories / totalMacroCalories) * 100
-  );
+  // Keep the three shares summing to exactly 100% despite independent rounding.
+  const carbShare = Math.max(0, 100 - proteinShare - fatShare);
 
   const barLabel = `Distributie calorii pe macronutrienti: proteine ${proteinShare}%, grasimi ${fatShare}%, carbohidrati ${carbShare}%.`;
 
@@ -585,8 +584,9 @@ function ActivityBreakdownBar({ result }: { result: CalorieCalculatorResult }) {
   const total = Math.max(result.estimatedTdee, 1);
 
   const bmrShare = Math.round((bmr / total) * 100);
-  const activityShare = Math.round((activity / total) * 100);
-  const trainingShare = Math.round((training / total) * 100);
+  const trainingShare = training > 0 ? Math.round((training / total) * 100) : 0;
+  // Keep the shares summing to exactly 100% despite independent rounding.
+  const activityShare = Math.max(0, 100 - bmrShare - trainingShare);
 
   const bmrPercent = Math.max(8, (bmr / total) * 100);
   const activityPercent = Math.max(4, (activity / total) * 100);
