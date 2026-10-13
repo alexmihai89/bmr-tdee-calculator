@@ -7,12 +7,34 @@ import { MinimalIcon } from "@/components/MinimalIcon";
 
 const disclaimerStorageKey = "am-calorie-calculator-disclaimer-accepted";
 
-function subscribeToDisclaimer(callback: () => void) {
-  window.addEventListener("storage", callback);
-  return () => window.removeEventListener("storage", callback);
+// Shared acceptance store so the gated calculator (top of the page) and the
+// disclaimer section (end of the page) stay in sync within the same tab. A
+// plain storage event does not fire in the tab that wrote it, so the two
+// components subscribe to this in-memory store instead.
+let sessionAccepted = false;
+const listeners = new Set<() => void>();
+
+function emitAcceptance() {
+  for (const listener of listeners) {
+    listener();
+  }
 }
 
-function readDisclaimerAccepted() {
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  window.addEventListener("storage", callback);
+
+  return () => {
+    listeners.delete(callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
+function readAccepted() {
+  if (sessionAccepted) {
+    return true;
+  }
+
   try {
     return window.localStorage.getItem(disclaimerStorageKey) === "true";
   } catch {
@@ -20,39 +42,98 @@ function readDisclaimerAccepted() {
   }
 }
 
-function readServerDisclaimerAccepted() {
+function readServerAccepted() {
   return false;
 }
 
-export function DisclaimerGate({ children }: { children: React.ReactNode }) {
-  const storedAccepted = useSyncExternalStore(
-    subscribeToDisclaimer,
-    readDisclaimerAccepted,
-    readServerDisclaimerAccepted
+function acceptDisclaimer() {
+  sessionAccepted = true;
+
+  try {
+    window.localStorage.setItem(disclaimerStorageKey, "true");
+  } catch {
+    // Ignore storage errors (e.g. private mode); the session flag still unlocks.
+  }
+
+  emitAcceptance();
+}
+
+function useDisclaimerAccepted() {
+  return useSyncExternalStore(subscribe, readAccepted, readServerAccepted);
+}
+
+function scrollToId(id: string) {
+  window.setTimeout(() => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, 80);
+}
+
+/**
+ * Wraps the calculator. Until the disclaimer at the end of the page is
+ * confirmed, it shows a locked placeholder that points the user there.
+ */
+export function CalculatorGate({ children }: { children: React.ReactNode }) {
+  const accepted = useDisclaimerAccepted();
+
+  if (accepted) {
+    return <>{children}</>;
+  }
+
+  return (
+    <div className="rounded-[2rem] border border-neutral-200 bg-white/90 p-6 text-center shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-10">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+        <MinimalIcon name="shield" className="h-6 w-6" />
+      </div>
+
+      <h2 className="mt-4 text-2xl font-semibold tracking-tight text-neutral-950">
+        Confirma disclaimerul ca sa incepi
+      </h2>
+
+      <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-neutral-600">
+        Calculatorul se deblocheaza dupa ce citesti si confirmi disclaimerul de
+        la finalul paginii. Apoi te aducem direct la primele date de completat.
+      </p>
+
+      <a
+        href="#disclaimer"
+        className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/10 transition hover:bg-blue-600"
+      >
+        Mergi la confirmare
+        <span aria-hidden="true">↓</span>
+      </a>
+    </div>
   );
+}
+
+/**
+ * The disclaimer card, placed at the end of the page. On confirmation it
+ * unlocks the calculator and scrolls the user up to the first input.
+ */
+export function DisclaimerSection() {
+  const accepted = useDisclaimerAccepted();
   const [isChecked, setIsChecked] = useState(false);
-  const [sessionAccepted, setSessionAccepted] = useState(false);
+
+  if (accepted) {
+    return null;
+  }
 
   function handleContinue() {
     if (!isChecked) {
       return;
     }
 
-    try {
-      window.localStorage.setItem(disclaimerStorageKey, "true");
-    } catch {
-      // Ignore storage errors (e.g. private mode); the session flag still unlocks the calculator.
-    }
-
-    setSessionAccepted(true);
-  }
-
-  if (storedAccepted || sessionAccepted) {
-    return <>{children}</>;
+    acceptDisclaimer();
+    scrollToId("calculator-form");
   }
 
   return (
-    <div className="rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-7">
+    <div
+      id="disclaimer"
+      className="scroll-mt-6 rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:scroll-mt-10 md:p-7"
+    >
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
