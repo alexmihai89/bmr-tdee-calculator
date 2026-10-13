@@ -63,11 +63,7 @@ export function calculateCalories(
     estimatedMonthlyWeightChangeKg: goalResult.estimatedMonthlyWeightChangeKg,
   });
 
-  const warnings: CalculatorWarning[] = [];
-
-  if (goalResult.warning) {
-    warnings.push(goalResult.warning);
-  }
+  const warnings: CalculatorWarning[] = [...goalResult.warnings];
 
   return {
     input,
@@ -82,10 +78,14 @@ export function calculateCalories(
 
     trainingCalories: tdeeResult.trainingCalories,
     averageWorkoutCalories: tdeeResult.averageWorkoutCalories,
+    weeklyTrainingCalories: tdeeResult.weeklyTrainingCalories,
 
     targetCalories: goalResult.targetCalories,
 
     realisticCalorieRange: goalResult.realisticCalorieRange,
+
+    calorieDifferenceFromTdee: goalResult.calorieDifferenceFromTdee,
+    calorieDifferencePercent: goalResult.calorieDifferencePercent,
 
     estimatedMonthlyWeightChangeKg: goalResult.estimatedMonthlyWeightChangeKg,
 

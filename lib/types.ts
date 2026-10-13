@@ -71,6 +71,7 @@ export type TdeeResult = {
 
   trainingCalories: number;
   averageWorkoutCalories: number;
+  weeklyTrainingCalories: number;
 
   estimatedTdee: number;
 };
@@ -84,7 +85,7 @@ export type GoalResult = {
   calorieDifferenceFromTdee: number;
   calorieDifferencePercent: number;
   estimatedMonthlyWeightChangeKg: number;
-  warning?: CalculatorWarning;
+  warnings: CalculatorWarning[];
 };
 
 export type MacroRange = {
@@ -146,6 +147,7 @@ export type CalorieCalculatorResult = {
 
   trainingCalories: number;
   averageWorkoutCalories: number;
+  weeklyTrainingCalories: number;
 
   targetCalories: number;
 
@@ -154,9 +156,12 @@ export type CalorieCalculatorResult = {
     max: number;
   };
 
+  calorieDifferenceFromTdee: number;
+  calorieDifferencePercent: number;
+
   estimatedMonthlyWeightChangeKg: number;
 
-  macros?: MacroResult;
+  macros: MacroResult;
 
   hydration: HydrationResult;
 

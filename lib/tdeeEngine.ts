@@ -48,6 +48,7 @@ export function calculateTdee(input: CalorieCalculatorInput): TdeeResult {
 
     trainingCalories: trainingResult.dailyAverageTrainingCalories,
     averageWorkoutCalories: trainingResult.averageWorkoutCalories,
+    weeklyTrainingCalories: trainingResult.weeklyTrainingCalories,
 
     estimatedTdee,
   };

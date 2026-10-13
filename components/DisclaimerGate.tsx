@@ -2,52 +2,141 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { MinimalIcon } from "@/components/MinimalIcon";
 
 const disclaimerStorageKey = "am-calorie-calculator-disclaimer-accepted";
 
-export function DisclaimerGate({ children }: { children: React.ReactNode }) {
-  const [hasAccepted, setHasAccepted] = useState(false);
+// Shared acceptance store so the gated calculator (top of the page) and the
+// disclaimer section (end of the page) stay in sync within the same tab. A
+// plain storage event does not fire in the tab that wrote it, so the two
+// components subscribe to this in-memory store instead.
+let sessionAccepted = false;
+const listeners = new Set<() => void>();
+
+function emitAcceptance() {
+  for (const listener of listeners) {
+    listener();
+  }
+}
+
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  window.addEventListener("storage", callback);
+
+  return () => {
+    listeners.delete(callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
+function readAccepted() {
+  if (sessionAccepted) {
+    return true;
+  }
+
+  try {
+    return window.localStorage.getItem(disclaimerStorageKey) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function readServerAccepted() {
+  return false;
+}
+
+function acceptDisclaimer() {
+  sessionAccepted = true;
+
+  try {
+    window.localStorage.setItem(disclaimerStorageKey, "true");
+  } catch {
+    // Ignore storage errors (e.g. private mode); the session flag still unlocks.
+  }
+
+  emitAcceptance();
+}
+
+function useDisclaimerAccepted() {
+  return useSyncExternalStore(subscribe, readAccepted, readServerAccepted);
+}
+
+function scrollToId(id: string) {
+  window.setTimeout(() => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, 80);
+}
+
+/**
+ * Wraps the calculator. Until the disclaimer at the end of the page is
+ * confirmed, it shows a locked placeholder that points the user there.
+ */
+export function CalculatorGate({ children }: { children: React.ReactNode }) {
+  const accepted = useDisclaimerAccepted();
+
+  if (accepted) {
+    return <>{children}</>;
+  }
+
+  return (
+    <div className="rounded-[2rem] border border-neutral-200 bg-white/90 p-6 text-center shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-10">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+        <MinimalIcon name="shield" className="h-6 w-6" />
+      </div>
+
+      <h2 className="mt-4 text-2xl font-semibold tracking-tight text-neutral-950">
+        Confirma disclaimerul ca sa incepi
+      </h2>
+
+      <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-neutral-600">
+        Calculatorul se deblocheaza dupa ce citesti si confirmi disclaimerul de
+        la finalul paginii. Apoi te aducem direct la primele date de completat.
+      </p>
+
+      <a
+        href="#disclaimer"
+        className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/10 transition hover:bg-blue-600"
+      >
+        Mergi la confirmare
+        <span aria-hidden="true">↓</span>
+      </a>
+    </div>
+  );
+}
+
+/**
+ * The disclaimer card, placed at the end of the page. On confirmation it
+ * unlocks the calculator and scrolls the user up to the first input.
+ */
+export function DisclaimerSection() {
+  const accepted = useDisclaimerAccepted();
   const [isChecked, setIsChecked] = useState(false);
-  const [hasLoadedPreference, setHasLoadedPreference] = useState(false);
 
-  useEffect(() => {
-    const savedPreference = window.localStorage.getItem(disclaimerStorageKey);
-
-    if (savedPreference === "true") {
-      setHasAccepted(true);
-    }
-
-    setHasLoadedPreference(true);
-  }, []);
+  if (accepted) {
+    return null;
+  }
 
   function handleContinue() {
     if (!isChecked) {
       return;
     }
 
-    window.localStorage.setItem(disclaimerStorageKey, "true");
-    setHasAccepted(true);
-  }
-
-  if (!hasLoadedPreference) {
-    return (
-      <div className="rounded-[2rem] border border-neutral-200 bg-white/85 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.06)] backdrop-blur md:p-6">
-        <p className="text-sm text-neutral-500">Se incarca...</p>
-      </div>
-    );
-  }
-
-  if (hasAccepted) {
-    return <>{children}</>;
+    acceptDisclaimer();
+    scrollToId("calculator-form");
   }
 
   return (
-    <div className="rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-7">
+    <div
+      id="disclaimer"
+      className="scroll-mt-6 rounded-[2rem] border border-neutral-200 bg-white/90 p-5 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur md:scroll-mt-10 md:p-7"
+    >
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
             Inainte sa folosesti calculatorul
           </p>
 
@@ -62,14 +151,14 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
           </p>
         </div>
 
-        <div className="w-fit rounded-full border border-emerald-700/15 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-800">
+        <div className="w-fit rounded-full border border-blue-700/15 bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-800">
           Estimari educationale
         </div>
       </div>
 
       <div className="mt-7 grid gap-4 lg:grid-cols-3">
         <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
             <MinimalIcon name="calculator" className="h-5 w-5" />
           </div>
 
@@ -86,7 +175,7 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-50 text-sky-700">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
             <MinimalIcon name="activity" className="h-5 w-5" />
           </div>
 
@@ -125,7 +214,7 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
             type="checkbox"
             checked={isChecked}
             onChange={(event) => setIsChecked(event.target.checked)}
-            className="mt-1 h-5 w-5 accent-emerald-600"
+            className="mt-1 h-5 w-5 accent-blue-600"
           />
 
           <span className="text-sm leading-6 text-neutral-700">
@@ -141,7 +230,7 @@ export function DisclaimerGate({ children }: { children: React.ReactNode }) {
           onClick={handleContinue}
           className={
             isChecked
-              ? "rounded-2xl bg-emerald-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-emerald-600"
+              ? "rounded-2xl bg-blue-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-blue-900/10 transition hover:bg-blue-600"
               : "cursor-not-allowed rounded-2xl bg-neutral-200 px-5 py-4 text-base font-semibold text-neutral-400"
           }
         >

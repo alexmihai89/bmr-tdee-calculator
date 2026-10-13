@@ -1,26 +1,28 @@
 // app/layout.tsx
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Public_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const displayFont = Bricolage_Grotesque({
+  variable: "--font-display",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const bodyFont = Public_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://calculator-bmr-tdee.vercel.app/"),
-  title: "AM Calorie Calculator | BMR, TDEE si Macro-uri",
+  title: "BMR TDEE Calculator | Rata metabolica si necesar caloric",
   description:
     "Calculator simplu pentru estimarea BMR, TDEE, calorii tinta, macro-uri si hidratare in functie de activitate zilnica, pasi, job, antrenamente si obiectiv.",
   keywords: [
-    "AM Calorie Calculator",
+    "BMR TDEE Calculator",
     "Alexandru Mihai",
     "calculator BMR",
     "calculator TDEE",
@@ -61,17 +63,17 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "AM Calorie Calculator | BMR, TDEE si Macro-uri",
+    title: "BMR TDEE Calculator | Rata metabolica si necesar caloric",
     description:
       "Estimeaza BMR, TDEE, calorii tinta, macro-uri si hidratare pe baza activitatii zilnice, pasilor, jobului si antrenamentelor.",
     type: "website",
     locale: "ro_RO",
     url: "https://calculator-bmr-tdee.vercel.app/",
-    siteName: "AM Calorie Calculator",
+    siteName: "BMR TDEE Calculator",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AM Calorie Calculator | BMR, TDEE si Macro-uri",
+    title: "BMR TDEE Calculator | Rata metabolica si necesar caloric",
     description:
       "Estimeaza BMR, TDEE, calorii tinta, macro-uri si hidratare pe baza activitatii zilnice, pasilor, jobului si antrenamentelor.",
   },
@@ -85,7 +87,7 @@ export default function RootLayout({
   return (
     <html lang="ro">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${displayFont.variable} ${bodyFont.variable} antialiased`}
       >
         {children}
       </body>
