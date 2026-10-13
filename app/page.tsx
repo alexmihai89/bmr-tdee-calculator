@@ -296,7 +296,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-col gap-3 border-t border-neutral-200 pt-5 text-xs leading-5 text-neutral-400 md:flex-row md:items-center md:justify-between">
+          <div className="mt-6 flex flex-col gap-3 border-t border-neutral-200 pt-5 text-xs leading-5 text-neutral-500 md:flex-row md:items-center md:justify-between">
             <p>© BMR TDEE Calculator by Alexandru Mihai.</p>
             <p>Un punct de pornire clar pentru nutritie, activitate si progres.</p>
           </div>
